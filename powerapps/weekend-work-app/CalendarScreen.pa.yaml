@@ -58,7 +58,7 @@ Screens:
                         Height: =48
                         Layout: =ButtonLayout.TextOnly
                         LayoutMinWidth: =0
-                        OnSelect: =Navigate(Screen1, ScreenTransition.Fade)
+                        OnSelect: =Navigate(Screen1_이승우, ScreenTransition.Fade)
                         Text: ="홈"
                         Width: =If(Parent.Width < 720, 96, Parent.Width)
                   - S5NavPlanned:

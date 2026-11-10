@@ -55,7 +55,7 @@ Screens:
                         AlignInContainer: =AlignInContainer.Stretch
                         Appearance: ='ButtonAppearance'.Subtle
                         Height: =48
-                        OnSelect: =Navigate(Screen1)
+                        OnSelect: =Navigate(Screen1_이승우)
                         Text: ="홈"
                         Width: =Parent.Width - 24
                   - S4NavPlanned:
@@ -179,7 +179,7 @@ Screens:
                         AlignInContainer: =AlignInContainer.Stretch
                         Appearance: ='ButtonAppearance'.Subtle
                         Height: =48
-                        OnSelect: =Navigate(Screen1)
+                        OnSelect: =Navigate(Screen1_이승우)
                         Text: ="홈"
                         Width: =Parent.Width - 24
                   - S4PhoneNavPlanned:
@@ -333,6 +333,6 @@ Screens:
                         AlignInContainer: =AlignInContainer.Start
                         Appearance: ='ButtonAppearance'.Secondary
                         Height: =48
-                        OnSelect: =Navigate(Screen1)
+                        OnSelect: =Navigate(Screen1_이승우)
                         Text: ="홈으로 돌아가기"
                         Width: =220

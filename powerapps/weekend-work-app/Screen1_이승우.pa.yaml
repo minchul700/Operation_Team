@@ -1,5 +1,5 @@
 Screens:
-  Screen1:
+  Screen1_이승우:
     Properties:
       Fill: =RGBA(255, 255, 255, 1)
       LoadingSpinnerColor: =RGBA(0, 120, 212, 1)
@@ -55,7 +55,7 @@ Screens:
                         AlignInContainer: =AlignInContainer.Stretch
                         Appearance: ='ButtonAppearance'.Primary
                         Height: =48
-                        OnSelect: =Navigate(Screen1)
+                        OnSelect: =Navigate(Screen1_이승우)
                         Text: ="홈"
                         Width: =Parent.Width
                   - S1NavPlanned:
@@ -179,7 +179,7 @@ Screens:
                         AlignInContainer: =AlignInContainer.Stretch
                         Appearance: ='ButtonAppearance'.Primary
                         Height: =48
-                        OnSelect: =Navigate(Screen1)
+                        OnSelect: =Navigate(Screen1_이승우)
                         Text: ="홈"
                         Width: =Parent.Width
                   - S1PhoneNavPlanned:
@@ -461,3 +461,26 @@ Screens:
                               PaddingRight: =0
                               PaddingTop: =0
                               Text: ="신청 내역이 없습니다."
+            - Button1:
+                Control: Classic/Button
+                Properties:
+                  BorderColor: =RGBA(0, 0, 0, 0)
+                  BorderStyle: =BorderStyle.None
+                  Color: =RGBA(255, 255, 255, 1)
+                  DisabledBorderColor: =RGBA(0, 0, 0, 0)
+                  DisabledColor: =RGBA(161, 159, 157, 1)
+                  DisabledFill: =RGBA(242, 242, 241, 0)
+                  Fill: =RGBA(0, 120, 212, 1)
+                  Font: =Font.'Segoe UI'
+                  HoverBorderColor: =RGBA(0, 0, 0, 0)
+                  HoverColor: =RGBA(255, 255, 255, 1)
+                  HoverFill: =RGBA(16, 110, 190, 1)
+                  LayoutMinHeight: =16
+                  LayoutMinWidth: =16
+                  PressedBorderColor: =RGBA(0, 69, 120, 1)
+                  PressedColor: =RGBA(255, 255, 255, 1)
+                  PressedFill: =RGBA(16, 110, 190, 1)
+                  RadiusBottomLeft: =0
+                  RadiusBottomRight: =0
+                  RadiusTopLeft: =0
+                  RadiusTopRight: =0
