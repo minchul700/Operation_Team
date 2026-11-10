@@ -326,6 +326,17 @@ Screens:
                               PaddingTop: =0
                               Size: =16
                               Text: ="신청 내역 조회는 데이터 저장 기능 연결 후 이용할 수 있습니다."
+                  - S4InquiryButton:
+                      Control: ModernButton
+                      Properties:
+                        AccessibleLabel: ="신청 내역 조회. 데이터 연결이 없어 실제 내역은 아직 표시되지 않습니다."
+                        AlignInContainer: =AlignInContainer.Start
+                        Appearance: ='ButtonAppearance'.Primary
+                        Height: =48
+                        OnSelect: =Notify("조회할 신청 데이터가 연결되지 않았습니다.", NotificationType.Information)
+                        Text: ="조회"
+                        Tooltip: ="데이터 연결 후 신청 내역을 조회할 수 있습니다."
+                        Width: =220
                   - S4HomeButton:
                       Control: ModernButton
                       Properties:
