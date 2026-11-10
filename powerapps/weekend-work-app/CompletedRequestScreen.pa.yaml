@@ -1,0 +1,747 @@
+Screens:
+  CompletedRequestScreen:
+    Properties:
+      Fill: =RGBA(246, 247, 249, 1)
+    Children:
+      - S3Root:
+          Control: GroupContainer
+          Variant: AutoLayout
+          Properties:
+            Fill: =RGBA(246, 247, 249, 1)
+            Height: =Parent.Height
+            LayoutAlignItems: =LayoutAlignItems.Stretch
+            LayoutDirection: =If(Parent.Width < 720, LayoutDirection.Vertical, LayoutDirection.Horizontal)
+            Width: =Parent.Width
+          Children:
+            - S3DesktopRail:
+                Control: GroupContainer
+                Variant: AutoLayout
+                Properties:
+                  Fill: =RGBA(239, 241, 244, 1)
+                  FillPortions: =0
+                  Height: =Parent.Height
+                  LayoutAlignItems: =LayoutAlignItems.Stretch
+                  LayoutDirection: =LayoutDirection.Vertical
+                  LayoutGap: =8
+                  LayoutMinHeight: =0
+                  LayoutMinWidth: =0
+                  PaddingBottom: =16
+                  PaddingLeft: =14
+                  PaddingRight: =14
+                  PaddingTop: =22
+                  Visible: =Parent.Width >= 720
+                  Width: =220
+                Children:
+                  - S3RailTitle:
+                      Control: ModernText
+                      Properties:
+                        AccessibleLabel: ="주말근무 신청 시스템"
+                        AlignInContainer: =AlignInContainer.Stretch
+                        Color: =RGBA(32, 39, 48, 1)
+                        FontWeight: =FontWeight.Semibold
+                        Height: =54
+                        PaddingBottom: =4
+                        PaddingLeft: =4
+                        PaddingRight: =4
+                        PaddingTop: =4
+                        Size: =18
+                        Text: ="주말근무 신청 시스템"
+                        Width: =Parent.Width
+                  - S3NavHome:
+                      Control: ModernButton
+                      Properties:
+                        AccessibleLabel: ="홈으로 이동"
+                        AlignInContainer: =AlignInContainer.Stretch
+                        Appearance: =ButtonAppearance.Subtle
+                        Height: =48
+                        OnSelect: =Navigate(Screen1)
+                        Text: ="홈"
+                        Width: =Parent.Width
+                  - S3NavPlanned:
+                      Control: ModernButton
+                      Properties:
+                        AccessibleLabel: ="주말근무 예정 신청 화면으로 이동"
+                        AlignInContainer: =AlignInContainer.Stretch
+                        Appearance: =ButtonAppearance.Subtle
+                        Height: =48
+                        OnSelect: =Navigate(PlannedRequestScreen)
+                        Text: ="주말근무 예정 신청"
+                        Width: =Parent.Width
+                  - S3NavCompleted:
+                      Control: ModernButton
+                      Properties:
+                        AccessibleLabel: ="주말근무 완료 신청, 현재 화면"
+                        AlignInContainer: =AlignInContainer.Stretch
+                        Height: =48
+                        OnSelect: =Navigate(CompletedRequestScreen)
+                        Text: ="주말근무 완료 신청"
+                        Width: =Parent.Width
+                  - S3NavInquiry:
+                      Control: ModernButton
+                      Properties:
+                        AccessibleLabel: ="조회 안내 화면으로 이동"
+                        AlignInContainer: =AlignInContainer.Stretch
+                        Appearance: =ButtonAppearance.Subtle
+                        Height: =48
+                        OnSelect: =Navigate(InquiryScreen)
+                        Text: ="조회"
+                        Width: =Parent.Width
+                  - S3NavCalendar:
+                      Control: ModernButton
+                      Properties:
+                        AccessibleLabel: ="캘린더 안내 화면으로 이동"
+                        AlignInContainer: =AlignInContainer.Stretch
+                        Appearance: =ButtonAppearance.Subtle
+                        Height: =48
+                        OnSelect: =Navigate(CalendarScreen)
+                        Text: ="캘린더"
+                        Width: =Parent.Width
+                  - S3NavAdmin:
+                      Control: ModernButton
+                      Properties:
+                        AccessibleLabel: ="관리자 조회 안내 화면으로 이동"
+                        AlignInContainer: =AlignInContainer.Stretch
+                        Appearance: =ButtonAppearance.Subtle
+                        Height: =48
+                        OnSelect: =Navigate(AdminScreen)
+                        Text: ="관리자 조회"
+                        Width: =Parent.Width
+            - S3PhoneHeader:
+                Control: GroupContainer
+                Variant: AutoLayout
+                Properties:
+                  Fill: =RGBA(255, 255, 255, 1)
+                  FillPortions: =0
+                  Height: =60
+                  LayoutAlignItems: =LayoutAlignItems.Center
+                  LayoutDirection: =LayoutDirection.Horizontal
+                  LayoutGap: =8
+                  LayoutJustifyContent: =LayoutJustifyContent.SpaceBetween
+                  LayoutMinHeight: =0
+                  LayoutMinWidth: =0
+                  PaddingBottom: =8
+                  PaddingLeft: =12
+                  PaddingRight: =12
+                  PaddingTop: =8
+                  Visible: =Parent.Width < 720
+                  Width: =Parent.Width
+                Children:
+                  - S3MenuToggle:
+                      Control: ModernButton
+                      Properties:
+                        AccessibleLabel: ="탐색 메뉴 열기 또는 닫기"
+                        Appearance: =ButtonAppearance.Outline
+                        Height: =44
+                        OnSelect: |-
+                          =UpdateContext({locNavOpen: !locNavOpen})
+                        Text: ="메뉴"
+                        Width: =72
+                  - S3PhoneTitle:
+                      Control: ModernText
+                      Properties:
+                        AccessibleLabel: ="주말근무 완료 신청"
+                        Align: =Align.Right
+                        AlignInContainer: =AlignInContainer.Stretch
+                        Color: =RGBA(32, 39, 48, 1)
+                        FillPortions: =1
+                        FontWeight: =FontWeight.Semibold
+                        Height: =40
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =17
+                        Text: ="완료 신청"
+                        Width: =Parent.Width - 100
+                        Wrap: =false
+            - S3PhoneNav:
+                Control: GroupContainer
+                Variant: AutoLayout
+                Properties:
+                  Fill: =RGBA(239, 241, 244, 1)
+                  FillPortions: =0
+                  Height: =328
+                  LayoutAlignItems: =LayoutAlignItems.Stretch
+                  LayoutDirection: =LayoutDirection.Vertical
+                  LayoutGap: =4
+                  LayoutMinHeight: =0
+                  LayoutMinWidth: =0
+                  PaddingBottom: =8
+                  PaddingLeft: =12
+                  PaddingRight: =12
+                  PaddingTop: =8
+                  Visible: =Parent.Width < 720 && locNavOpen
+                  Width: =Parent.Width
+                Children:
+                  - S3PhoneNavHome:
+                      Control: ModernButton
+                      Properties:
+                        AccessibleLabel: ="홈으로 이동"
+                        AlignInContainer: =AlignInContainer.Stretch
+                        Appearance: =ButtonAppearance.Subtle
+                        Height: =48
+                        OnSelect: =Navigate(Screen1)
+                        Text: ="홈"
+                        Width: =Parent.Width
+                  - S3PhoneNavPlanned:
+                      Control: ModernButton
+                      Properties:
+                        AccessibleLabel: ="주말근무 예정 신청 화면으로 이동"
+                        AlignInContainer: =AlignInContainer.Stretch
+                        Appearance: =ButtonAppearance.Subtle
+                        Height: =48
+                        OnSelect: =Navigate(PlannedRequestScreen)
+                        Text: ="주말근무 예정 신청"
+                        Width: =Parent.Width
+                  - S3PhoneNavCompleted:
+                      Control: ModernButton
+                      Properties:
+                        AccessibleLabel: ="주말근무 완료 신청, 현재 화면"
+                        AlignInContainer: =AlignInContainer.Stretch
+                        Height: =48
+                        OnSelect: =Navigate(CompletedRequestScreen)
+                        Text: ="주말근무 완료 신청"
+                        Width: =Parent.Width
+                  - S3PhoneNavInquiry:
+                      Control: ModernButton
+                      Properties:
+                        AccessibleLabel: ="조회 안내 화면으로 이동"
+                        AlignInContainer: =AlignInContainer.Stretch
+                        Appearance: =ButtonAppearance.Subtle
+                        Height: =48
+                        OnSelect: =Navigate(InquiryScreen)
+                        Text: ="조회"
+                        Width: =Parent.Width
+                  - S3PhoneNavCalendar:
+                      Control: ModernButton
+                      Properties:
+                        AccessibleLabel: ="캘린더 안내 화면으로 이동"
+                        AlignInContainer: =AlignInContainer.Stretch
+                        Appearance: =ButtonAppearance.Subtle
+                        Height: =48
+                        OnSelect: =Navigate(CalendarScreen)
+                        Text: ="캘린더"
+                        Width: =Parent.Width
+                  - S3PhoneNavAdmin:
+                      Control: ModernButton
+                      Properties:
+                        AccessibleLabel: ="관리자 조회 안내 화면으로 이동"
+                        AlignInContainer: =AlignInContainer.Stretch
+                        Appearance: =ButtonAppearance.Subtle
+                        Height: =48
+                        OnSelect: =Navigate(AdminScreen)
+                        Text: ="관리자 조회"
+                        Width: =Parent.Width
+            - S3MainScroll:
+                Control: GroupContainer
+                Variant: AutoLayout
+                Properties:
+                  Fill: =RGBA(246, 247, 249, 1)
+                  LayoutAlignItems: =LayoutAlignItems.Stretch
+                  LayoutDirection: =LayoutDirection.Vertical
+                  LayoutGap: =16
+                  LayoutMinHeight: =0
+                  LayoutMinWidth: =0
+                  LayoutOverflowY: =LayoutOverflow.Scroll
+                  PaddingBottom: =28
+                  PaddingLeft: =If(Parent.Width < 720, 16, 32)
+                  PaddingRight: =If(Parent.Width < 720, 16, 32)
+                  PaddingTop: =24
+                Children:
+                  - S3Heading:
+                      Control: GroupContainer
+                      Variant: AutoLayout
+                      Properties:
+                        FillPortions: =0
+                        Height: =88
+                        LayoutAlignItems: =LayoutAlignItems.Stretch
+                        LayoutDirection: =LayoutDirection.Vertical
+                        LayoutGap: =4
+                        LayoutMinHeight: =0
+                        LayoutMinWidth: =0
+                        Width: =Parent.Width
+                      Children:
+                        - S3Title:
+                            Control: ModernText
+                            Properties:
+                              AccessibleLabel: ="주말근무 완료 신청"
+                              AlignInContainer: =AlignInContainer.Stretch
+                              Color: =RGBA(32, 39, 48, 1)
+                              FontWeight: =FontWeight.Semibold
+                              Height: =38
+                              PaddingBottom: =0
+                              PaddingLeft: =0
+                              PaddingRight: =0
+                              PaddingTop: =0
+                              Size: =24
+                              Text: ="주말근무 완료 신청"
+                              Width: =Parent.Width
+                              Wrap: =false
+                        - S3Subtitle:
+                            Control: ModernText
+                            Properties:
+                              AccessibleLabel: ="완료된 주말근무 입력 안내. 저장 기능은 연결되지 않았습니다."
+                              AlignInContainer: =AlignInContainer.Stretch
+                              Color: =RGBA(91, 99, 109, 1)
+                              Height: =40
+                              PaddingBottom: =0
+                              PaddingLeft: =0
+                              PaddingRight: =0
+                              PaddingTop: =0
+                              Size: =14
+                              Text: ="이미 완료한 주말근무 내용을 입력합니다. 입력 내용은 저장되지 않습니다."
+                              Width: =Parent.Width
+                  - S3ApplicantCard:
+                      Control: GroupContainer
+                      Variant: AutoLayout
+                      Properties:
+                        BorderColor: =RGBA(224, 228, 233, 1)
+                        BorderThickness: =1
+                        Fill: =RGBA(255, 255, 255, 1)
+                        FillPortions: =0
+                        Height: =316
+                        LayoutAlignItems: =LayoutAlignItems.Stretch
+                        LayoutDirection: =LayoutDirection.Vertical
+                        LayoutGap: =8
+                        LayoutMinHeight: =0
+                        LayoutMinWidth: =0
+                        PaddingBottom: =16
+                        PaddingLeft: =20
+                        PaddingRight: =20
+                        PaddingTop: =16
+                        RadiusBottomLeft: =8
+                        RadiusBottomRight: =8
+                        RadiusTopLeft: =8
+                        RadiusTopRight: =8
+                        Width: =Parent.Width
+                      Children:
+                        - S3ApplicantHeading:
+                            Control: ModernText
+                            Properties:
+                              AccessibleLabel: ="신청자 및 근무일"
+                              AlignInContainer: =AlignInContainer.Stretch
+                              Color: =RGBA(32, 39, 48, 1)
+                              FontWeight: =FontWeight.Semibold
+                              Height: =28
+                              PaddingBottom: =0
+                              PaddingLeft: =0
+                              PaddingRight: =0
+                              PaddingTop: =0
+                              Size: =17
+                              Text: ="신청자 및 근무일"
+                              Width: =Parent.Width
+                              Wrap: =false
+                        - S3NameLabel:
+                            Control: ModernText
+                            Properties:
+                              AccessibleLabel: ="신청자 이름 입력란 레이블"
+                              AlignInContainer: =AlignInContainer.Stretch
+                              FontWeight: =FontWeight.Semibold
+                              Height: =22
+                              PaddingBottom: =0
+                              PaddingLeft: =0
+                              PaddingRight: =0
+                              PaddingTop: =0
+                              Size: =14
+                              Text: ="신청자 이름"
+                              Width: =Parent.Width
+                              Wrap: =false
+                        - S3NameInput:
+                            Control: ModernTextInput
+                            Properties:
+                              AccessibleLabel: ="신청자 이름"
+                              AlignInContainer: =AlignInContainer.Stretch
+                              Height: =44
+                              Placeholder: ="이름을 입력하세요"
+                              Required: =true
+                              Width: =Parent.Width
+                        - S3TeamLabel:
+                            Control: ModernText
+                            Properties:
+                              AccessibleLabel: ="소속 또는 팀 입력란 레이블"
+                              AlignInContainer: =AlignInContainer.Stretch
+                              FontWeight: =FontWeight.Semibold
+                              Height: =22
+                              PaddingBottom: =0
+                              PaddingLeft: =0
+                              PaddingRight: =0
+                              PaddingTop: =0
+                              Size: =14
+                              Text: ="소속 / 팀"
+                              Width: =Parent.Width
+                              Wrap: =false
+                        - S3TeamInput:
+                            Control: ModernTextInput
+                            Properties:
+                              AccessibleLabel: ="소속 또는 팀"
+                              AlignInContainer: =AlignInContainer.Stretch
+                              Height: =44
+                              Placeholder: ="소속 또는 팀을 입력하세요"
+                              Required: =true
+                              Width: =Parent.Width
+                        - S3ActualDateLabel:
+                            Control: ModernText
+                            Properties:
+                              AccessibleLabel: ="실제 근무일 선택란 레이블"
+                              AlignInContainer: =AlignInContainer.Stretch
+                              FontWeight: =FontWeight.Semibold
+                              Height: =22
+                              PaddingBottom: =0
+                              PaddingLeft: =0
+                              PaddingRight: =0
+                              PaddingTop: =0
+                              Size: =14
+                              Text: ="실제 근무일"
+                              Width: =Parent.Width
+                              Wrap: =false
+                        - S3ActualDateInput:
+                            Control: ModernDatePicker
+                            Properties:
+                              AccessibleLabel: ="실제 근무일"
+                              AlignInContainer: =AlignInContainer.Stretch
+                              DefaultDate: =Today()
+                              Format: =DatePickerFormat.Short
+                              Height: =44
+                              Placeholder: ="실제 근무일 선택"
+                              StartOfWeek: =StartOfWeek.Monday
+                              Width: =Parent.Width
+                  - S3WorkCard:
+                      Control: GroupContainer
+                      Variant: AutoLayout
+                      Properties:
+                        BorderColor: =RGBA(224, 228, 233, 1)
+                        BorderThickness: =1
+                        Fill: =RGBA(255, 255, 255, 1)
+                        FillPortions: =0
+                        Height: =232
+                        LayoutAlignItems: =LayoutAlignItems.Stretch
+                        LayoutDirection: =LayoutDirection.Vertical
+                        LayoutGap: =8
+                        LayoutMinHeight: =0
+                        LayoutMinWidth: =0
+                        PaddingBottom: =16
+                        PaddingLeft: =20
+                        PaddingRight: =20
+                        PaddingTop: =16
+                        RadiusBottomLeft: =8
+                        RadiusBottomRight: =8
+                        RadiusTopLeft: =8
+                        RadiusTopRight: =8
+                        Width: =Parent.Width
+                      Children:
+                        - S3WorkHeading:
+                            Control: ModernText
+                            Properties:
+                              AccessibleLabel: ="근무 정보"
+                              AlignInContainer: =AlignInContainer.Stretch
+                              Color: =RGBA(32, 39, 48, 1)
+                              FontWeight: =FontWeight.Semibold
+                              Height: =28
+                              PaddingBottom: =0
+                              PaddingLeft: =0
+                              PaddingRight: =0
+                              PaddingTop: =0
+                              Size: =17
+                              Text: ="근무 정보"
+                              Width: =Parent.Width
+                              Wrap: =false
+                        - S3ProjectLabel:
+                            Control: ModernText
+                            Properties:
+                              AccessibleLabel: ="프로젝트명 입력란 레이블"
+                              AlignInContainer: =AlignInContainer.Stretch
+                              FontWeight: =FontWeight.Semibold
+                              Height: =22
+                              PaddingBottom: =0
+                              PaddingLeft: =0
+                              PaddingRight: =0
+                              PaddingTop: =0
+                              Size: =14
+                              Text: ="프로젝트명"
+                              Width: =Parent.Width
+                              Wrap: =false
+                        - S3ProjectInput:
+                            Control: ModernTextInput
+                            Properties:
+                              AccessibleLabel: ="프로젝트명"
+                              AlignInContainer: =AlignInContainer.Stretch
+                              Height: =44
+                              Placeholder: ="프로젝트명을 입력하세요"
+                              Required: =true
+                              Width: =Parent.Width
+                        - S3LocationLabel:
+                            Control: ModernText
+                            Properties:
+                              AccessibleLabel: ="근무 장소 입력란 레이블"
+                              AlignInContainer: =AlignInContainer.Stretch
+                              FontWeight: =FontWeight.Semibold
+                              Height: =22
+                              PaddingBottom: =0
+                              PaddingLeft: =0
+                              PaddingRight: =0
+                              PaddingTop: =0
+                              Size: =14
+                              Text: ="근무 장소"
+                              Width: =Parent.Width
+                              Wrap: =false
+                        - S3LocationInput:
+                            Control: ModernTextInput
+                            Properties:
+                              AccessibleLabel: ="근무 장소"
+                              AlignInContainer: =AlignInContainer.Stretch
+                              Height: =44
+                              Placeholder: ="장소를 입력하세요"
+                              Required: =true
+                              Width: =Parent.Width
+                  - S3DetailCard:
+                      Control: GroupContainer
+                      Variant: AutoLayout
+                      Properties:
+                        BorderColor: =RGBA(224, 228, 233, 1)
+                        BorderThickness: =1
+                        Fill: =RGBA(255, 255, 255, 1)
+                        FillPortions: =0
+                        Height: =158
+                        LayoutAlignItems: =LayoutAlignItems.Stretch
+                        LayoutDirection: =LayoutDirection.Vertical
+                        LayoutGap: =8
+                        LayoutMinHeight: =0
+                        LayoutMinWidth: =0
+                        PaddingBottom: =16
+                        PaddingLeft: =20
+                        PaddingRight: =20
+                        PaddingTop: =16
+                        RadiusBottomLeft: =8
+                        RadiusBottomRight: =8
+                        RadiusTopLeft: =8
+                        RadiusTopRight: =8
+                        Width: =Parent.Width
+                      Children:
+                        - S3DetailHeading:
+                            Control: ModernText
+                            Properties:
+                              AccessibleLabel: ="세부 근무 내용"
+                              AlignInContainer: =AlignInContainer.Stretch
+                              Color: =RGBA(32, 39, 48, 1)
+                              FontWeight: =FontWeight.Semibold
+                              Height: =28
+                              PaddingBottom: =0
+                              PaddingLeft: =0
+                              PaddingRight: =0
+                              PaddingTop: =0
+                              Size: =17
+                              Text: ="세부 근무 내용"
+                              Width: =Parent.Width
+                              Wrap: =false
+                        - S3DetailInput:
+                            Control: ModernTextInput
+                            Properties:
+                              AccessibleLabel: ="세부 근무 내용"
+                              AlignInContainer: =AlignInContainer.Stretch
+                              Height: =80
+                              Placeholder: ="완료한 근무 내용을 입력하세요"
+                              Required: =true
+                              Type: =TextInputType.Multiline
+                              Width: =Parent.Width
+                  - S3TimeCard:
+                      Control: GroupContainer
+                      Variant: AutoLayout
+                      Properties:
+                        BorderColor: =RGBA(224, 228, 233, 1)
+                        BorderThickness: =1
+                        Fill: =RGBA(255, 255, 255, 1)
+                        FillPortions: =0
+                        Height: =280
+                        LayoutAlignItems: =LayoutAlignItems.Stretch
+                        LayoutDirection: =LayoutDirection.Vertical
+                        LayoutGap: =8
+                        LayoutMinHeight: =0
+                        LayoutMinWidth: =0
+                        PaddingBottom: =16
+                        PaddingLeft: =20
+                        PaddingRight: =20
+                        PaddingTop: =16
+                        RadiusBottomLeft: =8
+                        RadiusBottomRight: =8
+                        RadiusTopLeft: =8
+                        RadiusTopRight: =8
+                        Width: =Parent.Width
+                      Children:
+                        - S3TimeHeading:
+                            Control: ModernText
+                            Properties:
+                              AccessibleLabel: ="근무 시간"
+                              AlignInContainer: =AlignInContainer.Stretch
+                              Color: =RGBA(32, 39, 48, 1)
+                              FontWeight: =FontWeight.Semibold
+                              Height: =28
+                              PaddingBottom: =0
+                              PaddingLeft: =0
+                              PaddingRight: =0
+                              PaddingTop: =0
+                              Size: =17
+                              Text: ="근무 시간"
+                              Width: =Parent.Width
+                              Wrap: =false
+                        - S3StartLabel:
+                            Control: ModernText
+                            Properties:
+                              AccessibleLabel: ="시작 시각은 24시간 HH:mm 형식입니다"
+                              AlignInContainer: =AlignInContainer.Stretch
+                              FontWeight: =FontWeight.Semibold
+                              Height: =22
+                              PaddingBottom: =0
+                              PaddingLeft: =0
+                              PaddingRight: =0
+                              PaddingTop: =0
+                              Size: =14
+                              Text: ="시작 시각 (24시간 HH:mm)"
+                              Width: =Parent.Width
+                              Wrap: =false
+                        - S3StartInput:
+                            Control: ModernTextInput
+                            Properties:
+                              AccessibleLabel: ="시작 시각, 24시간 HH:mm 형식"
+                              AlignInContainer: =AlignInContainer.Stretch
+                              Height: =44
+                              Placeholder: |-
+                                ="예: 09:00"
+                              Width: =Parent.Width
+                        - S3EndLabel:
+                            Control: ModernText
+                            Properties:
+                              AccessibleLabel: ="종료 시각은 24시간 HH:mm 형식입니다"
+                              AlignInContainer: =AlignInContainer.Stretch
+                              FontWeight: =FontWeight.Semibold
+                              Height: =22
+                              PaddingBottom: =0
+                              PaddingLeft: =0
+                              PaddingRight: =0
+                              PaddingTop: =0
+                              Size: =14
+                              Text: ="종료 시각 (24시간 HH:mm)"
+                              Width: =Parent.Width
+                              Wrap: =false
+                        - S3EndInput:
+                            Control: ModernTextInput
+                            Properties:
+                              AccessibleLabel: ="종료 시각, 24시간 HH:mm 형식"
+                              AlignInContainer: =AlignInContainer.Stretch
+                              Height: =44
+                              Placeholder: |-
+                                ="예: 18:00"
+                              Width: =Parent.Width
+                        - S3Duration:
+                            Control: ModernText
+                            Properties:
+                              AccessibleLabel: ="시작 및 종료 시각으로 계산한 총 근무 시간"
+                              AlignInContainer: =AlignInContainer.Stretch
+                              Color: =RGBA(0, 94, 184, 1)
+                              FontWeight: =FontWeight.Semibold
+                              PaddingBottom: =0
+                              PaddingLeft: =0
+                              PaddingRight: =0
+                              PaddingTop: =0
+                              Size: =16
+                              Text: =If(IsBlank(S3StartInput.Text) || IsBlank(S3EndInput.Text), "", IfError(Text((DateDiff(TimeValue(S3StartInput.Text), TimeValue(S3EndInput.Text), TimeUnit.Minutes) + If(TimeValue(S3EndInput.Text) < TimeValue(S3StartInput.Text), 1440, 0)) / 60, "0.##") & "시간", ""))
+                              Width: =Parent.Width
+                              Wrap: =false
+                  - S3ApprovalCard:
+                      Control: GroupContainer
+                      Variant: AutoLayout
+                      Properties:
+                        BorderColor: =RGBA(190, 216, 244, 1)
+                        BorderThickness: =1
+                        Fill: =RGBA(235, 243, 252, 1)
+                        FillPortions: =0
+                        Height: =104
+                        LayoutAlignItems: =LayoutAlignItems.Stretch
+                        LayoutDirection: =LayoutDirection.Vertical
+                        LayoutGap: =8
+                        LayoutMinHeight: =0
+                        LayoutMinWidth: =0
+                        PaddingBottom: =16
+                        PaddingLeft: =20
+                        PaddingRight: =20
+                        PaddingTop: =16
+                        RadiusBottomLeft: =8
+                        RadiusBottomRight: =8
+                        RadiusTopLeft: =8
+                        RadiusTopRight: =8
+                        Width: =Parent.Width
+                      Children:
+                        - S3ApprovalHeading:
+                            Control: ModernText
+                            Properties:
+                              AccessibleLabel: ="승인 절차 안내, 읽기 전용"
+                              AlignInContainer: =AlignInContainer.Stretch
+                              Color: =RGBA(32, 39, 48, 1)
+                              FontWeight: =FontWeight.Semibold
+                              Height: =28
+                              PaddingBottom: =0
+                              PaddingLeft: =0
+                              PaddingRight: =0
+                              PaddingTop: =0
+                              Text: ="승인 절차 안내 (읽기 전용)"
+                              Width: =Parent.Width
+                              Wrap: =false
+                        - S3ApprovalRoute:
+                            Control: ModernText
+                            Properties:
+                              AccessibleLabel: |-
+                                ="안내용 승인 경로: 팀장, 본부장, 경영지원"
+                              AlignInContainer: =AlignInContainer.Stretch
+                              Color: =RGBA(45, 73, 105, 1)
+                              PaddingBottom: =0
+                              PaddingLeft: =0
+                              PaddingRight: =0
+                              PaddingTop: =0
+                              Text: ="팀장 → 본부장 → 경영지원"
+                              Width: =Parent.Width
+                  - S3SubmitCard:
+                      Control: GroupContainer
+                      Variant: AutoLayout
+                      Properties:
+                        BorderColor: =RGBA(224, 228, 233, 1)
+                        BorderThickness: =1
+                        Fill: =RGBA(255, 255, 255, 1)
+                        FillPortions: =0
+                        Height: =136
+                        LayoutAlignItems: =LayoutAlignItems.Stretch
+                        LayoutDirection: =LayoutDirection.Vertical
+                        LayoutGap: =8
+                        LayoutMinHeight: =0
+                        LayoutMinWidth: =0
+                        PaddingBottom: =16
+                        PaddingLeft: =20
+                        PaddingRight: =20
+                        PaddingTop: =16
+                        RadiusBottomLeft: =8
+                        RadiusBottomRight: =8
+                        RadiusTopLeft: =8
+                        RadiusTopRight: =8
+                        Width: =Parent.Width
+                      Children:
+                        - S3SubmitButton:
+                            Control: ModernButton
+                            Properties:
+                              AccessibleLabel: ="제출, 현재 비활성화됨"
+                              AlignInContainer: =AlignInContainer.Stretch
+                              DisplayMode: =DisplayMode.Disabled
+                              Height: =48
+                              Text: ="제출"
+                              Width: =Parent.Width
+                        - S3NoSaveNote:
+                            Control: ModernText
+                            Properties:
+                              AccessibleLabel: ="제출 및 저장 기능이 연결되지 않았음을 안내합니다"
+                              AlignInContainer: =AlignInContainer.Stretch
+                              Color: =RGBA(91, 99, 109, 1)
+                              Height: =40
+                              PaddingBottom: =0
+                              PaddingLeft: =0
+                              PaddingRight: =0
+                              PaddingTop: =0
+                              Size: =14
+                              Text: ="제출 및 저장 기능은 아직 연결되지 않았습니다."
+                              Width: =Parent.Width

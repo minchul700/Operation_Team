@@ -1,0 +1,8 @@
+EditorState:
+  ScreensOrder:
+    - Screen1
+    - PlannedRequestScreen
+    - CompletedRequestScreen
+    - InquiryScreen
+    - CalendarScreen
+    - AdminScreen
