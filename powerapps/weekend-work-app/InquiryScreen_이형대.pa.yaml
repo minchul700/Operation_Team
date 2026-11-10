@@ -1,5 +1,5 @@
 Screens:
-  InquiryScreen:
+  InquiryScreen_이형대:
     Properties:
       Fill: =RGBA(255, 255, 255, 1)
       LoadingSpinnerColor: =RGBA(0, 120, 212, 1)
@@ -65,7 +65,7 @@ Screens:
                         AlignInContainer: =AlignInContainer.Stretch
                         Appearance: ='ButtonAppearance'.Subtle
                         Height: =48
-                        OnSelect: =Navigate(PlannedRequestScreen)
+                        OnSelect: =Navigate(PlannedRequestScreen_권민철)
                         Text: ="주말근무 예정 신청"
                         Width: =Parent.Width - 24
                   - S4NavCompleted:
@@ -75,7 +75,7 @@ Screens:
                         AlignInContainer: =AlignInContainer.Stretch
                         Appearance: ='ButtonAppearance'.Subtle
                         Height: =48
-                        OnSelect: =Navigate(CompletedRequestScreen)
+                        OnSelect: =Navigate(CompletedRequestScreen_윤대진)
                         Text: ="주말근무 완료 신청"
                         Width: =Parent.Width - 24
                   - S4NavInquiry:
@@ -85,7 +85,7 @@ Screens:
                         AlignInContainer: =AlignInContainer.Stretch
                         Appearance: ='ButtonAppearance'.Primary
                         Height: =48
-                        OnSelect: =Navigate(InquiryScreen)
+                        OnSelect: =Navigate(InquiryScreen_이형대)
                         Text: ="조회"
                         Width: =Parent.Width - 24
                   - S4NavCalendar:
@@ -95,7 +95,7 @@ Screens:
                         AlignInContainer: =AlignInContainer.Stretch
                         Appearance: ='ButtonAppearance'.Subtle
                         Height: =48
-                        OnSelect: =Navigate(CalendarScreen)
+                        OnSelect: =Navigate(CalendarScreen_최해우)
                         Text: ="캘린더"
                         Width: =Parent.Width - 24
                   - S4NavAdmin:
@@ -105,7 +105,7 @@ Screens:
                         AlignInContainer: =AlignInContainer.Stretch
                         Appearance: ='ButtonAppearance'.Subtle
                         Height: =48
-                        OnSelect: =Navigate(AdminScreen)
+                        OnSelect: =Navigate(AdminScreen_김진현)
                         Text: ="관리자 조회"
                         Width: =Parent.Width - 24
             - S4PhoneTopBar:
@@ -189,7 +189,7 @@ Screens:
                         AlignInContainer: =AlignInContainer.Stretch
                         Appearance: ='ButtonAppearance'.Subtle
                         Height: =48
-                        OnSelect: =Navigate(PlannedRequestScreen)
+                        OnSelect: =Navigate(PlannedRequestScreen_권민철)
                         Text: ="주말근무 예정 신청"
                         Width: =Parent.Width - 24
                   - S4PhoneNavCompleted:
@@ -199,7 +199,7 @@ Screens:
                         AlignInContainer: =AlignInContainer.Stretch
                         Appearance: ='ButtonAppearance'.Subtle
                         Height: =48
-                        OnSelect: =Navigate(CompletedRequestScreen)
+                        OnSelect: =Navigate(CompletedRequestScreen_윤대진)
                         Text: ="주말근무 완료 신청"
                         Width: =Parent.Width - 24
                   - S4PhoneNavInquiry:
@@ -209,7 +209,7 @@ Screens:
                         AlignInContainer: =AlignInContainer.Stretch
                         Appearance: ='ButtonAppearance'.Primary
                         Height: =48
-                        OnSelect: =Navigate(InquiryScreen)
+                        OnSelect: =Navigate(InquiryScreen_이형대)
                         Text: ="조회"
                         Width: =Parent.Width - 24
                   - S4PhoneNavCalendar:
@@ -219,7 +219,7 @@ Screens:
                         AlignInContainer: =AlignInContainer.Stretch
                         Appearance: ='ButtonAppearance'.Subtle
                         Height: =48
-                        OnSelect: =Navigate(CalendarScreen)
+                        OnSelect: =Navigate(CalendarScreen_최해우)
                         Text: ="캘린더"
                         Width: =Parent.Width - 24
                   - S4PhoneNavAdmin:
@@ -229,7 +229,7 @@ Screens:
                         AlignInContainer: =AlignInContainer.Stretch
                         Appearance: ='ButtonAppearance'.Subtle
                         Height: =48
-                        OnSelect: =Navigate(AdminScreen)
+                        OnSelect: =Navigate(AdminScreen_김진현)
                         Text: ="관리자 조회"
                         Width: =Parent.Width - 24
             - S4MainContent:
@@ -326,6 +326,16 @@ Screens:
                               PaddingTop: =0
                               Size: =16
                               Text: ="신청 내역 조회는 데이터 저장 기능 연결 후 이용할 수 있습니다."
+                  - S4HomeButton:
+                      Control: ModernButton
+                      Properties:
+                        AccessibleLabel: ="홈으로 돌아가기"
+                        AlignInContainer: =AlignInContainer.Start
+                        Appearance: ='ButtonAppearance'.Secondary
+                        Height: =48
+                        OnSelect: =Navigate(Screen1_이승우)
+                        Text: ="홈으로 돌아가기"
+                        Width: =220
                   - S4InquiryButton:
                       Control: ModernButton
                       Properties:
@@ -336,14 +346,4 @@ Screens:
                         OnSelect: =Notify("조회할 신청 데이터가 연결되지 않았습니다.", NotificationType.Information)
                         Text: ="조회"
                         Tooltip: ="데이터 연결 후 신청 내역을 조회할 수 있습니다."
-                        Width: =220
-                  - S4HomeButton:
-                      Control: ModernButton
-                      Properties:
-                        AccessibleLabel: ="홈으로 돌아가기"
-                        AlignInContainer: =AlignInContainer.Start
-                        Appearance: ='ButtonAppearance'.Secondary
-                        Height: =48
-                        OnSelect: =Navigate(Screen1_이승우)
-                        Text: ="홈으로 돌아가기"
                         Width: =220

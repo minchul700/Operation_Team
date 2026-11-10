@@ -1,5 +1,5 @@
 Screens:
-  CalendarScreen:
+  CalendarScreen_최해우:
     Properties:
       Fill: =RGBA(245, 246, 248, 1)
     Children:
@@ -70,7 +70,7 @@ Screens:
                         Height: =48
                         Layout: =ButtonLayout.TextOnly
                         LayoutMinWidth: =0
-                        OnSelect: =Navigate(PlannedRequestScreen, ScreenTransition.Fade)
+                        OnSelect: =Navigate(PlannedRequestScreen_권민철, ScreenTransition.Fade)
                         Text: ="예정 신청"
                         Width: =If(Parent.Width < 720, 120, Parent.Width)
                   - S5NavCompleted:
@@ -82,7 +82,7 @@ Screens:
                         Height: =48
                         Layout: =ButtonLayout.TextOnly
                         LayoutMinWidth: =0
-                        OnSelect: =Navigate(CompletedRequestScreen, ScreenTransition.Fade)
+                        OnSelect: =Navigate(CompletedRequestScreen_윤대진, ScreenTransition.Fade)
                         Text: ="완료 신청"
                         Width: =If(Parent.Width < 720, 120, Parent.Width)
                   - S5NavInquiry:
@@ -94,7 +94,7 @@ Screens:
                         Height: =48
                         Layout: =ButtonLayout.TextOnly
                         LayoutMinWidth: =0
-                        OnSelect: =Navigate(InquiryScreen, ScreenTransition.Fade)
+                        OnSelect: =Navigate(InquiryScreen_이형대, ScreenTransition.Fade)
                         Text: ="조회"
                         Width: =If(Parent.Width < 720, 96, Parent.Width)
                   - S5NavCalendar:
@@ -117,7 +117,7 @@ Screens:
                         Height: =48
                         Layout: =ButtonLayout.TextOnly
                         LayoutMinWidth: =0
-                        OnSelect: =Navigate(AdminScreen, ScreenTransition.Fade)
+                        OnSelect: =Navigate(AdminScreen_김진현, ScreenTransition.Fade)
                         Text: ="관리자 조회"
                         Width: =If(Parent.Width < 720, 120, Parent.Width)
             - S5Main:

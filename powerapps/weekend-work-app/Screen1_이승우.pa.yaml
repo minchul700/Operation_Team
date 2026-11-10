@@ -65,7 +65,7 @@ Screens:
                         AlignInContainer: =AlignInContainer.Stretch
                         Appearance: ='ButtonAppearance'.Subtle
                         Height: =48
-                        OnSelect: =Navigate(PlannedRequestScreen)
+                        OnSelect: =Navigate(PlannedRequestScreen_권민철)
                         Text: ="주말근무 예정 신청"
                         Width: =Parent.Width
                   - S1NavCompleted:
@@ -75,7 +75,7 @@ Screens:
                         AlignInContainer: =AlignInContainer.Stretch
                         Appearance: ='ButtonAppearance'.Subtle
                         Height: =48
-                        OnSelect: =Navigate(CompletedRequestScreen)
+                        OnSelect: =Navigate(CompletedRequestScreen_윤대진)
                         Text: ="주말근무 완료 신청"
                         Width: =Parent.Width
                   - S1NavInquiry:
@@ -85,7 +85,7 @@ Screens:
                         AlignInContainer: =AlignInContainer.Stretch
                         Appearance: ='ButtonAppearance'.Subtle
                         Height: =48
-                        OnSelect: =Navigate(InquiryScreen)
+                        OnSelect: =Navigate(InquiryScreen_이형대)
                         Text: ="조회"
                         Width: =Parent.Width
                   - S1NavCalendar:
@@ -95,7 +95,7 @@ Screens:
                         AlignInContainer: =AlignInContainer.Stretch
                         Appearance: ='ButtonAppearance'.Subtle
                         Height: =48
-                        OnSelect: =Navigate(CalendarScreen)
+                        OnSelect: =Navigate(CalendarScreen_최해우)
                         Text: ="캘린더"
                         Width: =Parent.Width
                   - S1NavAdmin:
@@ -105,7 +105,7 @@ Screens:
                         AlignInContainer: =AlignInContainer.Stretch
                         Appearance: ='ButtonAppearance'.Subtle
                         Height: =48
-                        OnSelect: =Navigate(AdminScreen)
+                        OnSelect: =Navigate(AdminScreen_김진현)
                         Text: ="관리자 조회"
                         Width: =Parent.Width
             - S1PhoneTopBar:
@@ -189,7 +189,7 @@ Screens:
                         AlignInContainer: =AlignInContainer.Stretch
                         Appearance: ='ButtonAppearance'.Subtle
                         Height: =48
-                        OnSelect: =Navigate(PlannedRequestScreen)
+                        OnSelect: =Navigate(PlannedRequestScreen_권민철)
                         Text: ="주말근무 예정 신청"
                         Width: =Parent.Width
                   - S1PhoneNavCompleted:
@@ -199,7 +199,7 @@ Screens:
                         AlignInContainer: =AlignInContainer.Stretch
                         Appearance: ='ButtonAppearance'.Subtle
                         Height: =48
-                        OnSelect: =Navigate(CompletedRequestScreen)
+                        OnSelect: =Navigate(CompletedRequestScreen_윤대진)
                         Text: ="주말근무 완료 신청"
                         Width: =Parent.Width
                   - S1PhoneNavInquiry:
@@ -209,7 +209,7 @@ Screens:
                         AlignInContainer: =AlignInContainer.Stretch
                         Appearance: ='ButtonAppearance'.Subtle
                         Height: =48
-                        OnSelect: =Navigate(InquiryScreen)
+                        OnSelect: =Navigate(InquiryScreen_이형대)
                         Text: ="조회"
                         Width: =Parent.Width
                   - S1PhoneNavCalendar:
@@ -219,7 +219,7 @@ Screens:
                         AlignInContainer: =AlignInContainer.Stretch
                         Appearance: ='ButtonAppearance'.Subtle
                         Height: =48
-                        OnSelect: =Navigate(CalendarScreen)
+                        OnSelect: =Navigate(CalendarScreen_최해우)
                         Text: ="캘린더"
                         Width: =Parent.Width
                   - S1PhoneNavAdmin:
@@ -229,7 +229,7 @@ Screens:
                         AlignInContainer: =AlignInContainer.Stretch
                         Appearance: ='ButtonAppearance'.Subtle
                         Height: =48
-                        OnSelect: =Navigate(AdminScreen)
+                        OnSelect: =Navigate(AdminScreen_김진현)
                         Text: ="관리자 조회"
                         Width: =Parent.Width
             - S1MainContent:
@@ -348,7 +348,7 @@ Screens:
                                     AlignInContainer: =AlignInContainer.Stretch
                                     Appearance: ='ButtonAppearance'.Primary
                                     Height: =48
-                                    OnSelect: =Navigate(PlannedRequestScreen)
+                                    OnSelect: =Navigate(PlannedRequestScreen_권민철)
                                     Text: ="예정 신청 시작"
                                     Width: =Parent.Width
                         - S1CompletedCard:
@@ -408,7 +408,7 @@ Screens:
                                     AlignInContainer: =AlignInContainer.Stretch
                                     Appearance: ='ButtonAppearance'.Secondary
                                     Height: =48
-                                    OnSelect: =Navigate(CompletedRequestScreen)
+                                    OnSelect: =Navigate(CompletedRequestScreen_윤대진)
                                     Text: ="완료 신청 시작"
                                     Width: =Parent.Width
                   - S1EmptyCard:

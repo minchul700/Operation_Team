@@ -1,5 +1,5 @@
 Screens:
-  PlannedRequestScreen:
+  PlannedRequestScreen_권민철:
     Properties:
       Fill: =RGBA(245, 246, 248, 1)
     Children:
@@ -77,7 +77,7 @@ Screens:
                         Height: =48
                         Layout: =ButtonLayout.TextOnly
                         LayoutMinWidth: =0
-                        OnSelect: =Navigate(CompletedRequestScreen, ScreenTransition.Fade)
+                        OnSelect: =Navigate(CompletedRequestScreen_윤대진, ScreenTransition.Fade)
                         Text: ="완료 신청"
                         Width: =If(Parent.Width < 720, 120, Parent.Width)
                   - S2NavInquiry:
@@ -88,7 +88,7 @@ Screens:
                         Height: =48
                         Layout: =ButtonLayout.TextOnly
                         LayoutMinWidth: =0
-                        OnSelect: =Navigate(InquiryScreen, ScreenTransition.Fade)
+                        OnSelect: =Navigate(InquiryScreen_이형대, ScreenTransition.Fade)
                         Text: ="조회"
                         Width: =If(Parent.Width < 720, 96, Parent.Width)
                   - S2NavCalendar:
@@ -99,7 +99,7 @@ Screens:
                         Height: =48
                         Layout: =ButtonLayout.TextOnly
                         LayoutMinWidth: =0
-                        OnSelect: =Navigate(CalendarScreen, ScreenTransition.Fade)
+                        OnSelect: =Navigate(CalendarScreen_최해우, ScreenTransition.Fade)
                         Text: ="캘린더"
                         Width: =If(Parent.Width < 720, 110, Parent.Width)
                   - S2NavAdmin:
@@ -110,7 +110,7 @@ Screens:
                         Height: =48
                         Layout: =ButtonLayout.TextOnly
                         LayoutMinWidth: =0
-                        OnSelect: =Navigate(AdminScreen, ScreenTransition.Fade)
+                        OnSelect: =Navigate(AdminScreen_김진현, ScreenTransition.Fade)
                         Text: ="관리자 조회"
                         Width: =If(Parent.Width < 720, 120, Parent.Width)
             - S2Main:
@@ -512,6 +512,16 @@ Screens:
                               Layout: =ButtonLayout.TextOnly
                               LayoutMinWidth: =0
                               Text: ="제출"
+                              Width: =Parent.Width
+                        - S2TestButton:
+                            Control: ModernButton
+                            Properties:
+                              AccessibleLabel: ="Test 버튼"
+                              Height: =48
+                              Layout: =ButtonLayout.TextOnly
+                              LayoutMinWidth: =0
+                              OnSelect: =Notify("Test", NotificationType.Information)
+                              Text: ="Test"
                               Width: =Parent.Width
                         - S2SubmitNotice:
                             Control: ModernText
