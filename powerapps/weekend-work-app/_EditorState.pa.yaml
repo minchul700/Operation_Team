@@ -1,8 +1,8 @@
 EditorState:
   ScreensOrder:
-    - Screen1_이승우
-    - PlannedRequestScreen
-    - CompletedRequestScreen
-    - InquiryScreen
-    - CalendarScreen
-    - AdminScreen
+    - HomeScreen_이승우
+    - PlannedRequestScreen_권민철
+    - CompletedRequestScreen_윤대진
+    - InquiryScreen_이형대
+    - CalendarScreen_최해우
+    - AdminScreen_김진현

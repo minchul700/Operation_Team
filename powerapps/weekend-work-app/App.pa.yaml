@@ -1,4 +1,4 @@
 App:
   Properties:
-    StartScreen: =Screen1_이승우
+    StartScreen: =HomeScreen_이승우
     Theme: =PowerAppsTheme
