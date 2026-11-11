@@ -404,6 +404,7 @@ Screens:
                               LayoutMinHeight: =264
                               LayoutMinWidth: =0
                               ShowScrollbar: =false
+                              TabIndex: =0
                               TemplatePadding: =2
                               TemplateSize: =44
                               Width: =Parent.Width
@@ -431,6 +432,7 @@ Screens:
                               - S5SelectedDateOutline:
                                   Control: ModernText
                                   Properties:
+                                    AccessibleLabel: =Text(ThisItem.CalendarDate, "yyyy년 m월 d일 선택됨")
                                     BorderColor: =RGBA(35, 95, 195, 1)
                                     BorderThickness: =2
                                     Fill: =RGBA(0, 0, 0, 0)
