@@ -2,6 +2,8 @@ Screens:
   CompletedRequestScreen_윤대진:
     Properties:
       Fill: =RGBA(246, 247, 249, 1)
+      OnHidden: |-
+        =UpdateContext({locSelectedPlanned: Blank()})
     Children:
       - S3Root:
           Control: GroupContainer
@@ -253,7 +255,7 @@ Screens:
                       Variant: AutoLayout
                       Properties:
                         FillPortions: =0
-                        Height: =88
+                        Height: =If(Parent.Width < 720, 124, 96)
                         LayoutAlignItems: =LayoutAlignItems.Stretch
                         LayoutDirection: =LayoutDirection.Vertical
                         LayoutGap: =4
@@ -280,16 +282,16 @@ Screens:
                         - S3Subtitle:
                             Control: ModernText
                             Properties:
-                              AccessibleLabel: ="완료된 주말근무 입력 안내. 저장 기능은 연결되지 않았습니다."
+                              AccessibleLabel: =If(IsBlank(locSelectedPlanned), "완료된 주말근무 입력 안내. 저장 기능은 연결되지 않았습니다.", "선택한 예시 예정 신청의 내용을 기본 입력합니다. 실제 근무 내용으로 수정할 수 있으며 저장 기능은 연결되지 않았습니다.")
                               AlignInContainer: =AlignInContainer.Stretch
                               Color: =RGBA(91, 99, 109, 1)
-                              Height: =40
+                              Height: =If(Parent.Width < 720, 72, 48)
                               PaddingBottom: =0
                               PaddingLeft: =0
                               PaddingRight: =0
                               PaddingTop: =0
                               Size: =14
-                              Text: ="이미 완료한 주말근무 내용을 입력합니다. 입력 내용은 저장되지 않습니다."
+                              Text: =If(IsBlank(locSelectedPlanned), "이미 완료한 주말근무 내용을 입력합니다. 입력 내용은 저장되지 않습니다.", "선택한 예시 예정 신청의 내용이 기본 입력되었습니다. 실제 근무 내용에 맞게 수정하세요. 저장 기능은 연결되지 않았습니다.")
                               Width: =Parent.Width
                   - S3ApplicantCard:
                       Control: GroupContainer
@@ -351,6 +353,7 @@ Screens:
                             Properties:
                               AccessibleLabel: ="신청자 이름"
                               AlignInContainer: =AlignInContainer.Stretch
+                              Default: =Coalesce(locSelectedPlanned.ApplicantName, "")
                               Height: =44
                               Placeholder: ="이름을 입력하세요"
                               Required: =true
@@ -375,6 +378,7 @@ Screens:
                             Properties:
                               AccessibleLabel: ="소속 또는 팀"
                               AlignInContainer: =AlignInContainer.Stretch
+                              Default: =Coalesce(locSelectedPlanned.TeamName, "")
                               Height: =44
                               Placeholder: ="소속 또는 팀을 입력하세요"
                               Required: =true
@@ -399,7 +403,7 @@ Screens:
                             Properties:
                               AccessibleLabel: ="실제 근무일"
                               AlignInContainer: =AlignInContainer.Stretch
-                              DefaultDate: =Today()
+                              DefaultDate: =Coalesce(locSelectedPlanned.WorkDate, Today())
                               Format: =DatePickerFormat.Short
                               Height: =44
                               Placeholder: ="실제 근무일 선택"
@@ -465,6 +469,7 @@ Screens:
                             Properties:
                               AccessibleLabel: ="프로젝트명"
                               AlignInContainer: =AlignInContainer.Stretch
+                              Default: =Coalesce(locSelectedPlanned.ProjectName, "")
                               Height: =44
                               Placeholder: ="프로젝트명을 입력하세요"
                               Required: =true
@@ -489,6 +494,7 @@ Screens:
                             Properties:
                               AccessibleLabel: ="근무 장소"
                               AlignInContainer: =AlignInContainer.Stretch
+                              Default: =Coalesce(locSelectedPlanned.WorkPlace, "")
                               Height: =44
                               Placeholder: ="장소를 입력하세요"
                               Required: =true
@@ -538,6 +544,7 @@ Screens:
                             Properties:
                               AccessibleLabel: ="세부 근무 내용"
                               AlignInContainer: =AlignInContainer.Stretch
+                              Default: =Coalesce(locSelectedPlanned.Details, "")
                               Height: =80
                               Placeholder: ="완료한 근무 내용을 입력하세요"
                               Required: =true
@@ -603,6 +610,7 @@ Screens:
                             Properties:
                               AccessibleLabel: ="시작 시각, 24시간 HH:mm 형식"
                               AlignInContainer: =AlignInContainer.Stretch
+                              Default: =Coalesce(locSelectedPlanned.StartTime, "")
                               Height: =44
                               Placeholder: |-
                                 ="예: 09:00"
@@ -627,6 +635,7 @@ Screens:
                             Properties:
                               AccessibleLabel: ="종료 시각, 24시간 HH:mm 형식"
                               AlignInContainer: =AlignInContainer.Stretch
+                              Default: =Coalesce(locSelectedPlanned.EndTime, "")
                               Height: =44
                               Placeholder: |-
                                 ="예: 18:00"

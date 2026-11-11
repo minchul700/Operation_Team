@@ -358,7 +358,7 @@ Screens:
                         BorderThickness: =1
                         Fill: =RGBA(255, 255, 255, 1)
                         FillPortions: =0
-                        Height: =If(Parent.Width < 720, 560, 520)
+                        Height: =If(Parent.Width < 720, 360, 320)
                         LayoutAlignItems: =LayoutAlignItems.Stretch
                         LayoutDirection: =LayoutDirection.Vertical
                         LayoutGap: =8
@@ -376,7 +376,7 @@ Screens:
                         - S1EmptyTitle:
                             Control: ModernText
                             Properties:
-                              AccessibleLabel: ="신청 내역"
+                              AccessibleLabel: ="완료 신청할 예정 내역"
                               AlignInContainer: =AlignInContainer.Stretch
                               AutoHeight: =true
                               Color: =RGBA(32, 42, 57, 1)
@@ -386,12 +386,12 @@ Screens:
                               PaddingRight: =0
                               PaddingTop: =0
                               Size: =18
-                              Text: ="본인 신청 내역"
+                              Text: ="완료 신청할 예정 내역"
                               Wrap: =false
                         - S1EmptyMessage:
                             Control: ModernText
                             Properties:
-                              AccessibleLabel: ="아래 신청 내역은 화면 예시이며 실제 저장된 내역이 아닙니다. 항목을 선택하면 상세 내용을 볼 수 있습니다."
+                              AccessibleLabel: ="아래는 예시 예정 신청입니다. 항목을 선택하면 완료 신청 화면에 내용을 기본 입력합니다. 실제 신청 내역 저장은 아직 연결되지 않았습니다."
                               AlignInContainer: =AlignInContainer.Stretch
                               AutoHeight: =true
                               Color: =RGBA(83, 94, 108, 1)
@@ -399,18 +399,18 @@ Screens:
                               PaddingLeft: =0
                               PaddingRight: =0
                               PaddingTop: =0
-                              Text: ="화면 예시입니다. 실제 저장된 신청 내역은 아니며, 항목을 선택하면 상세 내용을 볼 수 있습니다."
+                              Text: ="예시 예정 신청입니다. 항목을 선택하면 완료 신청 화면에 내용을 기본 입력합니다. 실제 신청 내역 저장은 아직 연결되지 않았습니다."
                         - galS1DemoRequests:
                             Control: Gallery
                             Variant: Vertical
                             Properties:
-                              AccessibleLabel: ="예시 신청 내역 목록"
+                              AccessibleLabel: ="완료 신청할 예시 예정 내역 목록"
                               FillPortions: =0
                               Height: =176
                               Items: |-
                                 =Table(
-                                  {RequestId: "DEMO-001", RequestType: "예정 신청", WorkDate: DateAdd(Today(), 3, TimeUnit.Days), ProjectName: "샘플 프로젝트 A", WorkPlace: "샘플 근무 장소", WorkTime: "09:00~13:00", Reason: "예시: 주말 점검"},
-                                  {RequestId: "DEMO-002", RequestType: "완료 신청", WorkDate: DateAdd(Today(), -3, TimeUnit.Days), ProjectName: "샘플 프로젝트 B", WorkPlace: "샘플 근무 장소", WorkTime: "10:00~15:00", Reason: "예시: 긴급 지원"}
+                                  {RequestId: "DEMO-001", RequestType: "예정 신청", ApplicantName: User().FullName, TeamName: "샘플 소속", WorkDate: DateAdd(Today(), -3, TimeUnit.Days), ProjectName: "샘플 프로젝트 A", WorkPlace: "샘플 근무 장소 A", StartTime: "09:00", EndTime: "13:00", Details: "예시: 주말 점검"},
+                                  {RequestId: "DEMO-002", RequestType: "예정 신청", ApplicantName: User().FullName, TeamName: "샘플 소속", WorkDate: DateAdd(Today(), -10, TimeUnit.Days), ProjectName: "샘플 프로젝트 B", WorkPlace: "샘플 근무 장소 B", StartTime: "10:00", EndTime: "15:00", Details: "예시: 현장 지원"}
                                 )
                               LayoutMinHeight: =0
                               LayoutMinWidth: =0
@@ -426,11 +426,11 @@ Screens:
                                     BorderColor: =RGBA(220, 230, 240, 1)
                                     BorderThickness: =1
                                     Color: =RGBA(32, 42, 57, 1)
-                                    Fill: =If(!IsBlank(locSelectedDemoRequest) && locSelectedDemoRequest.RequestId = ThisItem.RequestId, RGBA(225, 239, 252, 1), RGBA(247, 250, 252, 1))
+                                    Fill: =RGBA(247, 250, 252, 1)
                                     Height: =66
                                     HoverFill: =RGBA(231, 242, 252, 1)
                                     OnSelect: |-
-                                      =UpdateContext({locSelectedDemoRequest: ThisItem})
+                                      =Navigate(CompletedRequestScreen_윤대진, ScreenTransition.Fade, {locSelectedPlanned: ThisItem})
                                     PaddingLeft: =14
                                     PressedFill: =RGBA(210, 232, 250, 1)
                                     RadiusBottomLeft: =6
@@ -439,62 +439,7 @@ Screens:
                                     RadiusTopRight: =6
                                     Size: =13
                                     Text: =ThisItem.RequestType & " · " & Text(ThisItem.WorkDate, "yyyy-mm-dd") & " · " & ThisItem.ProjectName
-                                    Tooltip: ="예시 신청 " & ThisItem.RequestId & " 상세 보기"
+                                    Tooltip: ="예정 신청 " & ThisItem.RequestId & " 내용을 완료 신청 화면에 입력"
                                     Width: =Parent.TemplateWidth - 12
                                     X: =6
                                     Y: =4
-                        - conS1DemoRequestDetail:
-                            Control: GroupContainer
-                            Variant: AutoLayout
-                            Properties:
-                              BorderColor: =RGBA(220, 230, 240, 1)
-                              BorderThickness: =1
-                              Fill: =RGBA(247, 250, 253, 1)
-                              FillPortions: =0
-                              Height: =If(Parent.Width < 720, 220, 180)
-                              LayoutAlignItems: =LayoutAlignItems.Stretch
-                              LayoutDirection: =LayoutDirection.Vertical
-                              LayoutGap: =8
-                              LayoutMinHeight: =0
-                              LayoutMinWidth: =0
-                              PaddingBottom: =12
-                              PaddingLeft: =14
-                              PaddingRight: =14
-                              PaddingTop: =12
-                              RadiusBottomLeft: =8
-                              RadiusBottomRight: =8
-                              RadiusTopLeft: =8
-                              RadiusTopRight: =8
-                              Visible: =!IsBlank(locSelectedDemoRequest)
-                            Children:
-                              - txtS1DemoDetailTitle:
-                                  Control: ModernText
-                                  Properties:
-                                    AccessibleLabel: ="선택한 예시 신청의 상세 제목"
-                                    AlignInContainer: =AlignInContainer.Stretch
-                                    AutoHeight: =true
-                                    Color: =RGBA(32, 42, 57, 1)
-                                    FontWeight: ='FontWeight'.Semibold
-                                    PaddingBottom: =0
-                                    PaddingLeft: =0
-                                    PaddingRight: =0
-                                    PaddingTop: =0
-                                    Size: =16
-                                    Text: =locSelectedDemoRequest.RequestType & " · " & Text(locSelectedDemoRequest.WorkDate, "yyyy-mm-dd") & " (예시)"
-                              - txtS1DemoDetailBody:
-                                  Control: ModernText
-                                  Properties:
-                                    AccessibleLabel: ="선택한 예시 신청의 상세 내용"
-                                    AlignInContainer: =AlignInContainer.Stretch
-                                    AutoHeight: =true
-                                    Color: =RGBA(83, 94, 108, 1)
-                                    PaddingBottom: =0
-                                    PaddingLeft: =0
-                                    PaddingRight: =0
-                                    PaddingTop: =0
-                                    Size: =14
-                                    Text: |-
-                                      ="프로젝트: " & locSelectedDemoRequest.ProjectName & Char(10) &
-                                        "근무 장소: " & locSelectedDemoRequest.WorkPlace & Char(10) &
-                                        "근무 시간: " & locSelectedDemoRequest.WorkTime & Char(10) &
-                                        "사유: " & locSelectedDemoRequest.Reason
