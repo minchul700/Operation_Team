@@ -1,0 +1,4 @@
+App:
+  Properties:
+    StartScreen: =HomeScreen_이승우
+    Theme: =PowerAppsTheme
