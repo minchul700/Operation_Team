@@ -2,6 +2,7 @@ Screens:
   CompletedRequestScreen_윤대진:
     Properties:
       Fill: =RGBA(246, 247, 249, 1)
+      OnVisible: =UpdateContext({locS3NameTouched:false, locS3TeamTouched:false, locS3DateTouched:false, locS3ProjectTouched:false, locS3LocationTouched:false, locS3DetailTouched:false, locS3StartTouched:false, locS3EndTouched:false})
     Children:
       - S3Root:
           Control: GroupContainer
@@ -299,7 +300,7 @@ Screens:
                         BorderThickness: =1
                         Fill: =RGBA(255, 255, 255, 1)
                         FillPortions: =0
-                        Height: =316
+                        Height: =316 + If(S3NameError.Visible, 28, 0) + If(S3TeamError.Visible, 28, 0) + If(S3DateError.Visible, 28, 0)
                         LayoutAlignItems: =LayoutAlignItems.Stretch
                         LayoutDirection: =LayoutDirection.Vertical
                         LayoutGap: =8
@@ -352,8 +353,25 @@ Screens:
                               AccessibleLabel: ="신청자 이름"
                               AlignInContainer: =AlignInContainer.Stretch
                               Height: =44
+                              OnChange: =UpdateContext({locS3NameTouched:true})
                               Placeholder: ="이름을 입력하세요"
-                              Required: =true
+                              TriggerOutput: =TriggerOutput.FocusOut
+                              ValidationState: =If(locS3NameTouched && IsBlank(Trim(S3NameInput.Text)), ValidationState.Error, ValidationState.None)
+                              Width: =Parent.Width
+                        - S3NameError:
+                            Control: ModernText
+                            Properties:
+                              AccessibleLabel: =Self.Text
+                              AlignInContainer: =AlignInContainer.Stretch
+                              Color: =RGBA(176, 32, 38, 1)
+                              Height: =20
+                              PaddingBottom: =0
+                              PaddingLeft: =0
+                              PaddingRight: =0
+                              PaddingTop: =0
+                              Size: =12
+                              Text: ="신청자 이름을 입력하세요."
+                              Visible: =locS3NameTouched && IsBlank(Trim(S3NameInput.Text))
                               Width: =Parent.Width
                         - S3TeamLabel:
                             Control: ModernText
@@ -376,8 +394,25 @@ Screens:
                               AccessibleLabel: ="소속 또는 팀"
                               AlignInContainer: =AlignInContainer.Stretch
                               Height: =44
+                              OnChange: =UpdateContext({locS3TeamTouched:true})
                               Placeholder: ="소속 또는 팀을 입력하세요"
-                              Required: =true
+                              TriggerOutput: =TriggerOutput.FocusOut
+                              ValidationState: =If(locS3TeamTouched && IsBlank(Trim(S3TeamInput.Text)), ValidationState.Error, ValidationState.None)
+                              Width: =Parent.Width
+                        - S3TeamError:
+                            Control: ModernText
+                            Properties:
+                              AccessibleLabel: =Self.Text
+                              AlignInContainer: =AlignInContainer.Stretch
+                              Color: =RGBA(176, 32, 38, 1)
+                              Height: =20
+                              PaddingBottom: =0
+                              PaddingLeft: =0
+                              PaddingRight: =0
+                              PaddingTop: =0
+                              Size: =12
+                              Text: ="소속/팀을 입력하세요."
+                              Visible: =locS3TeamTouched && IsBlank(Trim(S3TeamInput.Text))
                               Width: =Parent.Width
                         - S3ActualDateLabel:
                             Control: ModernText
@@ -400,10 +435,28 @@ Screens:
                               AccessibleLabel: ="실제 근무일"
                               AlignInContainer: =AlignInContainer.Stretch
                               DefaultDate: =Today()
+                              EndDate: =Today()
                               Format: =DatePickerFormat.Short
                               Height: =44
+                              OnChange: =UpdateContext({locS3DateTouched:true})
                               Placeholder: ="실제 근무일 선택"
                               StartOfWeek: =StartOfWeek.Monday
+                              ValidationState: =If(locS3DateTouched && (IsBlank(S3ActualDateInput.SelectedDate) || S3ActualDateInput.SelectedDate > Today()), ValidationState.Error, ValidationState.None)
+                              Width: =Parent.Width
+                        - S3DateError:
+                            Control: ModernText
+                            Properties:
+                              AccessibleLabel: =Self.Text
+                              AlignInContainer: =AlignInContainer.Stretch
+                              Color: =RGBA(176, 32, 38, 1)
+                              Height: =20
+                              PaddingBottom: =0
+                              PaddingLeft: =0
+                              PaddingRight: =0
+                              PaddingTop: =0
+                              Size: =12
+                              Text: =If(IsBlank(S3ActualDateInput.SelectedDate), "실제 근무일을 선택하세요.", "오늘 또는 이전 날짜만 선택하세요.")
+                              Visible: =locS3DateTouched && (IsBlank(S3ActualDateInput.SelectedDate) || S3ActualDateInput.SelectedDate > Today())
                               Width: =Parent.Width
                   - S3WorkCard:
                       Control: GroupContainer
@@ -413,7 +466,7 @@ Screens:
                         BorderThickness: =1
                         Fill: =RGBA(255, 255, 255, 1)
                         FillPortions: =0
-                        Height: =232
+                        Height: =232 + If(S3ProjectError.Visible, 28, 0) + If(S3LocationError.Visible, 28, 0)
                         LayoutAlignItems: =LayoutAlignItems.Stretch
                         LayoutDirection: =LayoutDirection.Vertical
                         LayoutGap: =8
@@ -466,8 +519,25 @@ Screens:
                               AccessibleLabel: ="프로젝트명"
                               AlignInContainer: =AlignInContainer.Stretch
                               Height: =44
+                              OnChange: =UpdateContext({locS3ProjectTouched:true})
                               Placeholder: ="프로젝트명을 입력하세요"
-                              Required: =true
+                              TriggerOutput: =TriggerOutput.FocusOut
+                              ValidationState: =If(locS3ProjectTouched && IsBlank(Trim(S3ProjectInput.Text)), ValidationState.Error, ValidationState.None)
+                              Width: =Parent.Width
+                        - S3ProjectError:
+                            Control: ModernText
+                            Properties:
+                              AccessibleLabel: =Self.Text
+                              AlignInContainer: =AlignInContainer.Stretch
+                              Color: =RGBA(176, 32, 38, 1)
+                              Height: =20
+                              PaddingBottom: =0
+                              PaddingLeft: =0
+                              PaddingRight: =0
+                              PaddingTop: =0
+                              Size: =12
+                              Text: ="프로젝트명을 입력하세요."
+                              Visible: =locS3ProjectTouched && IsBlank(Trim(S3ProjectInput.Text))
                               Width: =Parent.Width
                         - S3LocationLabel:
                             Control: ModernText
@@ -490,8 +560,25 @@ Screens:
                               AccessibleLabel: ="근무 장소"
                               AlignInContainer: =AlignInContainer.Stretch
                               Height: =44
+                              OnChange: =UpdateContext({locS3LocationTouched:true})
                               Placeholder: ="장소를 입력하세요"
-                              Required: =true
+                              TriggerOutput: =TriggerOutput.FocusOut
+                              ValidationState: =If(locS3LocationTouched && IsBlank(Trim(S3LocationInput.Text)), ValidationState.Error, ValidationState.None)
+                              Width: =Parent.Width
+                        - S3LocationError:
+                            Control: ModernText
+                            Properties:
+                              AccessibleLabel: =Self.Text
+                              AlignInContainer: =AlignInContainer.Stretch
+                              Color: =RGBA(176, 32, 38, 1)
+                              Height: =20
+                              PaddingBottom: =0
+                              PaddingLeft: =0
+                              PaddingRight: =0
+                              PaddingTop: =0
+                              Size: =12
+                              Text: ="근무 장소를 입력하세요."
+                              Visible: =locS3LocationTouched && IsBlank(Trim(S3LocationInput.Text))
                               Width: =Parent.Width
                   - S3DetailCard:
                       Control: GroupContainer
@@ -501,7 +588,7 @@ Screens:
                         BorderThickness: =1
                         Fill: =RGBA(255, 255, 255, 1)
                         FillPortions: =0
-                        Height: =158
+                        Height: =158 + If(S3DetailError.Visible, 28, 0)
                         LayoutAlignItems: =LayoutAlignItems.Stretch
                         LayoutDirection: =LayoutDirection.Vertical
                         LayoutGap: =8
@@ -539,9 +626,26 @@ Screens:
                               AccessibleLabel: ="세부 근무 내용"
                               AlignInContainer: =AlignInContainer.Stretch
                               Height: =80
+                              OnChange: =UpdateContext({locS3DetailTouched:true})
                               Placeholder: ="완료한 근무 내용을 입력하세요"
-                              Required: =true
+                              TriggerOutput: =TriggerOutput.FocusOut
                               Type: =TextInputType.Multiline
+                              ValidationState: =If(locS3DetailTouched && IsBlank(Trim(S3DetailInput.Text)), ValidationState.Error, ValidationState.None)
+                              Width: =Parent.Width
+                        - S3DetailError:
+                            Control: ModernText
+                            Properties:
+                              AccessibleLabel: =Self.Text
+                              AlignInContainer: =AlignInContainer.Stretch
+                              Color: =RGBA(176, 32, 38, 1)
+                              Height: =20
+                              PaddingBottom: =0
+                              PaddingLeft: =0
+                              PaddingRight: =0
+                              PaddingTop: =0
+                              Size: =12
+                              Text: ="근무 내용을 입력하세요."
+                              Visible: =locS3DetailTouched && IsBlank(Trim(S3DetailInput.Text))
                               Width: =Parent.Width
                   - S3TimeCard:
                       Control: GroupContainer
@@ -551,7 +655,7 @@ Screens:
                         BorderThickness: =1
                         Fill: =RGBA(255, 255, 255, 1)
                         FillPortions: =0
-                        Height: =280
+                        Height: =280 + If(S3StartError.Visible, 28, 0) + If(S3EndError.Visible, 28, 0)
                         LayoutAlignItems: =LayoutAlignItems.Stretch
                         LayoutDirection: =LayoutDirection.Vertical
                         LayoutGap: =8
@@ -604,8 +708,26 @@ Screens:
                               AccessibleLabel: ="시작 시각, 24시간 HH:mm 형식"
                               AlignInContainer: =AlignInContainer.Stretch
                               Height: =44
+                              OnChange: =UpdateContext({locS3StartTouched:true})
                               Placeholder: |-
                                 ="예: 09:00"
+                              TriggerOutput: =TriggerOutput.FocusOut
+                              ValidationState: =If(locS3StartTouched && !IsMatch(S3StartInput.Text, "^(?:[01][0-9]|2[0-3]):[0-5][0-9]$"), ValidationState.Error, ValidationState.None)
+                              Width: =Parent.Width
+                        - S3StartError:
+                            Control: ModernText
+                            Properties:
+                              AccessibleLabel: =Self.Text
+                              AlignInContainer: =AlignInContainer.Stretch
+                              Color: =RGBA(176, 32, 38, 1)
+                              Height: =20
+                              PaddingBottom: =0
+                              PaddingLeft: =0
+                              PaddingRight: =0
+                              PaddingTop: =0
+                              Size: =12
+                              Text: =If(IsBlank(Trim(S3StartInput.Text)), "시작 시각을 입력하세요.", "HH:mm 형식으로 입력하세요.")
+                              Visible: =locS3StartTouched && !IsMatch(S3StartInput.Text, "^(?:[01][0-9]|2[0-3]):[0-5][0-9]$")
                               Width: =Parent.Width
                         - S3EndLabel:
                             Control: ModernText
@@ -628,8 +750,26 @@ Screens:
                               AccessibleLabel: ="종료 시각, 24시간 HH:mm 형식"
                               AlignInContainer: =AlignInContainer.Stretch
                               Height: =44
+                              OnChange: =UpdateContext({locS3EndTouched:true})
                               Placeholder: |-
                                 ="예: 18:00"
+                              TriggerOutput: =TriggerOutput.FocusOut
+                              ValidationState: =If(locS3EndTouched && (!IsMatch(S3EndInput.Text, "^(?:[01][0-9]|2[0-3]):[0-5][0-9]$") || (IsMatch(S3StartInput.Text, "^(?:[01][0-9]|2[0-3]):[0-5][0-9]$") && S3StartInput.Text = S3EndInput.Text)), ValidationState.Error, ValidationState.None)
+                              Width: =Parent.Width
+                        - S3EndError:
+                            Control: ModernText
+                            Properties:
+                              AccessibleLabel: =Self.Text
+                              AlignInContainer: =AlignInContainer.Stretch
+                              Color: =RGBA(176, 32, 38, 1)
+                              Height: =20
+                              PaddingBottom: =0
+                              PaddingLeft: =0
+                              PaddingRight: =0
+                              PaddingTop: =0
+                              Size: =12
+                              Text: =If(IsBlank(Trim(S3EndInput.Text)), "종료 시각을 입력하세요.", If(!IsMatch(S3EndInput.Text, "^(?:[01][0-9]|2[0-3]):[0-5][0-9]$"), "HH:mm 형식으로 입력하세요.", "시작과 종료 시각이 같습니다."))
+                              Visible: =locS3EndTouched && (!IsMatch(S3EndInput.Text, "^(?:[01][0-9]|2[0-3]):[0-5][0-9]$") || (IsMatch(S3StartInput.Text, "^(?:[01][0-9]|2[0-3]):[0-5][0-9]$") && S3StartInput.Text = S3EndInput.Text))
                               Width: =Parent.Width
                         - S3Duration:
                             Control: ModernText
@@ -643,7 +783,7 @@ Screens:
                               PaddingRight: =0
                               PaddingTop: =0
                               Size: =16
-                              Text: =If(IsBlank(S3StartInput.Text) || IsBlank(S3EndInput.Text), "", IfError(Text((DateDiff(TimeValue(S3StartInput.Text), TimeValue(S3EndInput.Text), TimeUnit.Minutes) + If(TimeValue(S3EndInput.Text) < TimeValue(S3StartInput.Text), 1440, 0)) / 60, "0.##") & "시간", ""))
+                              Text: =If(!IsMatch(S3StartInput.Text, "^(?:[01][0-9]|2[0-3]):[0-5][0-9]$") || !IsMatch(S3EndInput.Text, "^(?:[01][0-9]|2[0-3]):[0-5][0-9]$") || S3StartInput.Text = S3EndInput.Text, "", With({startMinutes:Value(Left(S3StartInput.Text, 2)) * 60 + Value(Right(S3StartInput.Text, 2)), endMinutes:Value(Left(S3EndInput.Text, 2)) * 60 + Value(Right(S3EndInput.Text, 2))}, Text((endMinutes - startMinutes + If(endMinutes < startMinutes, 1440, 0)) / 60, "0.##") & "시간"))
                               Width: =Parent.Width
                               Wrap: =false
                   - S3ApprovalCard:
