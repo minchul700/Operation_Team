@@ -194,6 +194,20 @@
                 ]
               }
             },
+            "종료": {
+              "runAfter": {
+                "EmailReceived": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "b79b8e9e-5bae-42db-b7ca-dccccea8f185"
+              },
+              "type": "Terminate",
+              "inputs": {
+                "runStatus": "Cancelled"
+              }
+            },
             "IfSkipStage1": {
               "type": "If",
               "expression": {
@@ -1085,7 +1099,7 @@
                 }
               },
               "runAfter": {
-                "EmailReceived": [
+                "종료": [
                   "Succeeded"
                 ]
               }
