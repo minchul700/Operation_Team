@@ -194,20 +194,6 @@
                 ]
               }
             },
-            "종료": {
-              "runAfter": {
-                "EmailReceived": [
-                  "Succeeded"
-                ]
-              },
-              "metadata": {
-                "operationMetadataId": "b79b8e9e-5bae-42db-b7ca-dccccea8f185"
-              },
-              "type": "Terminate",
-              "inputs": {
-                "runStatus": "Cancelled"
-              }
-            },
             "IfSkipStage1": {
               "type": "If",
               "expression": {
@@ -230,7 +216,7 @@
                       "recordId": "@triggerBody()?['lsw_tb_weekendworkrequestid']",
                       "item/lsw_stage1result": "Skipped",
                       "item/lsw_currentstage": 2,
-                      "item/lsw_stage2approveremail": "bs.seo@dexconsulting.net",
+                      "item/lsw_stage2approveremail": "sw2.lee@dexconsulting.net",
                       "item/lsw_approvalstatus": "Pending"
                     },
                     "authentication": "@parameters('$authentication')"
@@ -251,8 +237,8 @@
                         "승인",
                         "거부"
                       ],
-                      "WebhookApprovalCreationInput/title": "[주말근무 2차 승인] @{triggerBody()?['lsw_requestname']}",
-                      "WebhookApprovalCreationInput/assignedTo": "bs.seo@dexconsulting.net",
+                      "WebhookApprovalCreationInput/title": "[TEST][주말근무 2차 승인] @{triggerBody()?['lsw_requestname']}",
+                      "WebhookApprovalCreationInput/assignedTo": "sw2.lee@dexconsulting.net",
                       "WebhookApprovalCreationInput/details": "신청자: @{outputs('GetEmployee')?['body/lsw_emp_name']}\n근무일: @{triggerBody()?['lsw_workdate']}\n프로젝트: @{triggerBody()?['lsw_projectname']}\n신청 사유: @{triggerBody()?['lsw_reason']}",
                       "WebhookApprovalCreationInput/requestor": "@outputs('GetEmployee')?['body/lsw_emp_email']",
                       "WebhookApprovalCreationInput/enableNotifications": true,
@@ -288,7 +274,7 @@
                           "recordId": "@triggerBody()?['lsw_tb_weekendworkrequestid']",
                           "item/lsw_stage2result": "Approved",
                           "item/lsw_currentstage": 3,
-                          "item/lsw_stage3approveremail": "ms.park@dexconsulting.net"
+                          "item/lsw_stage3approveremail": "sw2.lee@dexconsulting.net"
                         },
                         "authentication": "@parameters('$authentication')"
                       },
@@ -308,8 +294,8 @@
                             "승인",
                             "거부"
                           ],
-                          "WebhookApprovalCreationInput/title": "[주말근무 3차 승인] @{triggerBody()?['lsw_requestname']}",
-                          "WebhookApprovalCreationInput/assignedTo": "ms.park@dexconsulting.net",
+                          "WebhookApprovalCreationInput/title": "[TEST][주말근무 3차 승인] @{triggerBody()?['lsw_requestname']}",
+                          "WebhookApprovalCreationInput/assignedTo": "sw2.lee@dexconsulting.net",
                           "WebhookApprovalCreationInput/details": "신청자: @{outputs('GetEmployee')?['body/lsw_emp_name']}\n근무일: @{triggerBody()?['lsw_workdate']}\n프로젝트: @{triggerBody()?['lsw_projectname']}\n신청 사유: @{triggerBody()?['lsw_reason']}",
                           "WebhookApprovalCreationInput/requestor": "@outputs('GetEmployee')?['body/lsw_emp_email']",
                           "WebhookApprovalCreationInput/enableNotifications": true,
@@ -346,7 +332,7 @@
                               "item/lsw_approvalstatus": "Approved",
                               "item/lsw_currentstage": 3,
                               "item/lsw_stage3result": "Approved",
-                              "item/lsw_processedby": "ms.park@dexconsulting.net"
+                              "item/lsw_processedby": "sw2.lee@dexconsulting.net"
                             },
                             "authentication": "@parameters('$authentication')"
                           },
@@ -390,7 +376,7 @@
                                 "item/lsw_approvalstatus": "Rejected",
                                 "item/lsw_currentstage": 3,
                                 "item/lsw_stage3result": "Rejected",
-                                "item/lsw_processedby": "ms.park@dexconsulting.net",
+                                "item/lsw_processedby": "sw2.lee@dexconsulting.net",
                                 "item/lsw_rejectionreason": "@coalesce(first(outputs('Approval3Special')?['body/responses'])?['comments'],'')"
                               },
                               "authentication": "@parameters('$authentication')"
@@ -443,7 +429,7 @@
                             "item/lsw_approvalstatus": "Rejected",
                             "item/lsw_currentstage": 2,
                             "item/lsw_stage2result": "Rejected",
-                            "item/lsw_processedby": "bs.seo@dexconsulting.net",
+                            "item/lsw_processedby": "sw2.lee@dexconsulting.net",
                             "item/lsw_rejectionreason": "@coalesce(first(outputs('Approval2Special')?['body/responses'])?['comments'],'')"
                           },
                           "authentication": "@parameters('$authentication')"
@@ -633,7 +619,7 @@
                                 "recordId": "@triggerBody()?['lsw_tb_weekendworkrequestid']",
                                 "item/lsw_approvalstatus": "Pending",
                                 "item/lsw_currentstage": 1,
-                                "item/lsw_stage1approveremail": "@outputs('LeaderEmail')",
+                                "item/lsw_stage1approveremail": "sw2.lee@dexconsulting.net",
                                 "item/lsw_department": "@outputs('TeamName')"
                               },
                               "authentication": "@parameters('$authentication')"
@@ -658,8 +644,8 @@
                                   "승인",
                                   "거부"
                                 ],
-                                "WebhookApprovalCreationInput/title": "[주말근무 1차 승인] @{triggerBody()?['lsw_requestname']}",
-                                "WebhookApprovalCreationInput/assignedTo": "@outputs('LeaderEmail')",
+                                "WebhookApprovalCreationInput/title": "[TEST][주말근무 1차 승인] @{triggerBody()?['lsw_requestname']}",
+                                "WebhookApprovalCreationInput/assignedTo": "sw2.lee@dexconsulting.net",
                                 "WebhookApprovalCreationInput/details": "신청자: @{outputs('GetEmployee')?['body/lsw_emp_name']}\n근무일: @{triggerBody()?['lsw_workdate']}\n프로젝트: @{triggerBody()?['lsw_projectname']}\n신청 사유: @{triggerBody()?['lsw_reason']}",
                                 "WebhookApprovalCreationInput/requestor": "@outputs('GetEmployee')?['body/lsw_emp_email']",
                                 "WebhookApprovalCreationInput/enableNotifications": true,
@@ -695,7 +681,7 @@
                                     "recordId": "@triggerBody()?['lsw_tb_weekendworkrequestid']",
                                     "item/lsw_stage1result": "Approved",
                                     "item/lsw_currentstage": 2,
-                                    "item/lsw_stage2approveremail": "bs.seo@dexconsulting.net"
+                                    "item/lsw_stage2approveremail": "sw2.lee@dexconsulting.net"
                                   },
                                   "authentication": "@parameters('$authentication')"
                                 },
@@ -715,8 +701,8 @@
                                       "승인",
                                       "거부"
                                     ],
-                                    "WebhookApprovalCreationInput/title": "[주말근무 2차 승인] @{triggerBody()?['lsw_requestname']}",
-                                    "WebhookApprovalCreationInput/assignedTo": "bs.seo@dexconsulting.net",
+                                    "WebhookApprovalCreationInput/title": "[TEST][주말근무 2차 승인] @{triggerBody()?['lsw_requestname']}",
+                                    "WebhookApprovalCreationInput/assignedTo": "sw2.lee@dexconsulting.net",
                                     "WebhookApprovalCreationInput/details": "신청자: @{outputs('GetEmployee')?['body/lsw_emp_name']}\n근무일: @{triggerBody()?['lsw_workdate']}\n프로젝트: @{triggerBody()?['lsw_projectname']}\n신청 사유: @{triggerBody()?['lsw_reason']}",
                                     "WebhookApprovalCreationInput/requestor": "@outputs('GetEmployee')?['body/lsw_emp_email']",
                                     "WebhookApprovalCreationInput/enableNotifications": true,
@@ -752,7 +738,7 @@
                                         "recordId": "@triggerBody()?['lsw_tb_weekendworkrequestid']",
                                         "item/lsw_stage2result": "Approved",
                                         "item/lsw_currentstage": 3,
-                                        "item/lsw_stage3approveremail": "ms.park@dexconsulting.net"
+                                        "item/lsw_stage3approveremail": "sw2.lee@dexconsulting.net"
                                       },
                                       "authentication": "@parameters('$authentication')"
                                     },
@@ -772,8 +758,8 @@
                                           "승인",
                                           "거부"
                                         ],
-                                        "WebhookApprovalCreationInput/title": "[주말근무 3차 승인] @{triggerBody()?['lsw_requestname']}",
-                                        "WebhookApprovalCreationInput/assignedTo": "ms.park@dexconsulting.net",
+                                        "WebhookApprovalCreationInput/title": "[TEST][주말근무 3차 승인] @{triggerBody()?['lsw_requestname']}",
+                                        "WebhookApprovalCreationInput/assignedTo": "sw2.lee@dexconsulting.net",
                                         "WebhookApprovalCreationInput/details": "신청자: @{outputs('GetEmployee')?['body/lsw_emp_name']}\n근무일: @{triggerBody()?['lsw_workdate']}\n프로젝트: @{triggerBody()?['lsw_projectname']}\n신청 사유: @{triggerBody()?['lsw_reason']}",
                                         "WebhookApprovalCreationInput/requestor": "@outputs('GetEmployee')?['body/lsw_emp_email']",
                                         "WebhookApprovalCreationInput/enableNotifications": true,
@@ -810,7 +796,7 @@
                                             "item/lsw_approvalstatus": "Approved",
                                             "item/lsw_currentstage": 3,
                                             "item/lsw_stage3result": "Approved",
-                                            "item/lsw_processedby": "ms.park@dexconsulting.net"
+                                            "item/lsw_processedby": "sw2.lee@dexconsulting.net"
                                           },
                                           "authentication": "@parameters('$authentication')"
                                         },
@@ -854,7 +840,7 @@
                                               "item/lsw_approvalstatus": "Rejected",
                                               "item/lsw_currentstage": 3,
                                               "item/lsw_stage3result": "Rejected",
-                                              "item/lsw_processedby": "ms.park@dexconsulting.net",
+                                              "item/lsw_processedby": "sw2.lee@dexconsulting.net",
                                               "item/lsw_rejectionreason": "@coalesce(first(outputs('Approval3')?['body/responses'])?['comments'],'')"
                                             },
                                             "authentication": "@parameters('$authentication')"
@@ -907,7 +893,7 @@
                                           "item/lsw_approvalstatus": "Rejected",
                                           "item/lsw_currentstage": 2,
                                           "item/lsw_stage2result": "Rejected",
-                                          "item/lsw_processedby": "bs.seo@dexconsulting.net",
+                                          "item/lsw_processedby": "sw2.lee@dexconsulting.net",
                                           "item/lsw_rejectionreason": "@coalesce(first(outputs('Approval2')?['body/responses'])?['comments'],'')"
                                         },
                                         "authentication": "@parameters('$authentication')"
@@ -1099,7 +1085,7 @@
                 }
               },
               "runAfter": {
-                "종료": [
+                "EmailReceived": [
                   "Succeeded"
                 ]
               }
