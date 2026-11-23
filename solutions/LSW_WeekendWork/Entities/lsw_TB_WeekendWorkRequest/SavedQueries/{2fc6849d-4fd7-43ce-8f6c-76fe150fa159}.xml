@@ -10,8 +10,19 @@
     <layoutxml>
       <grid name="resultset" jump="lsw_requestname" select="1" icon="1" preview="1">
         <row name="result" id="lsw_tb_weekendworkrequestid">
-          <cell name="lsw_requestname" width="300" />
-          <cell name="createdon" width="125" />
+          <cell name="lsw_requestname" width="220" />
+          <cell name="lsw_requesttype" width="110" />
+          <cell name="lsw_applicantname" width="130" />
+          <cell name="lsw_applicantemail" width="190" />
+          <cell name="lsw_department" width="150" />
+          <cell name="lsw_workdate" width="115" />
+          <cell name="lsw_startat" width="145" />
+          <cell name="lsw_endat" width="145" />
+          <cell name="lsw_workminutes" width="105" />
+          <cell name="lsw_projectname" width="160" />
+          <cell name="lsw_approvalstatus" width="125" />
+          <cell name="lsw_currentstage" width="120" />
+          <cell name="createdon" width="140" />
         </row>
       </grid>
     </layoutxml>
@@ -21,6 +32,17 @@
         <entity name="lsw_tb_weekendworkrequest">
           <attribute name="lsw_tb_weekendworkrequestid" />
           <attribute name="lsw_requestname" />
+          <attribute name="lsw_requesttype" />
+          <attribute name="lsw_applicantname" />
+          <attribute name="lsw_applicantemail" />
+          <attribute name="lsw_department" />
+          <attribute name="lsw_workdate" />
+          <attribute name="lsw_startat" />
+          <attribute name="lsw_endat" />
+          <attribute name="lsw_workminutes" />
+          <attribute name="lsw_projectname" />
+          <attribute name="lsw_approvalstatus" />
+          <attribute name="lsw_currentstage" />
           <attribute name="createdon" />
           <order attribute="lsw_requestname" descending="false" />
           <filter type="and">
