@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<savedqueries xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <savedquery>
+    <IsCustomizable>1</IsCustomizable>
+    <CanBeDeleted>0</CanBeDeleted>
+    <isquickfindquery>0</isquickfindquery>
+    <isprivate>0</isprivate>
+    <isdefault>0</isdefault>
+    <savedqueryid>{eb2efd4b-b0c1-49c9-a261-fc0cbc98a48f}</savedqueryid>
+    <layoutxml>
+      <grid name="resultset" jump="lsw_requestname" select="1" icon="1" preview="1">
+        <row name="result" id="lsw_tb_weekendworkrequestid">
+          <cell name="lsw_requestname" width="300" />
+          <cell name="createdon" width="125" />
+        </row>
+      </grid>
+    </layoutxml>
+    <querytype>0</querytype>
+    <fetchxml>
+      <fetch version="1.0" mapping="logical">
+        <entity name="lsw_tb_weekendworkrequest">
+          <attribute name="lsw_tb_weekendworkrequestid" />
+          <attribute name="lsw_requestname" />
+          <attribute name="createdon" />
+          <order attribute="lsw_requestname" descending="false" />
+          <filter type="and">
+            <condition attribute="statecode" operator="eq" value="1" />
+          </filter>
+        </entity>
+      </fetch>
+    </fetchxml>
+    <IntroducedVersion>1.0</IntroducedVersion>
+    <LocalizedNames>
+      <LocalizedName description="Inactive TB_WeekendWorkRequests" languagecode="1033" />
+      <LocalizedName description="비활성 TB_WeekendWorkRequests" languagecode="1042" />
+    </LocalizedNames>
+  </savedquery>
+</savedqueries>

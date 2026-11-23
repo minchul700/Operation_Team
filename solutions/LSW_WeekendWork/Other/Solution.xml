@@ -80,20 +80,11 @@
     <RootComponents>
       <RootComponent type="1" schemaName="lsw_tb_adminpassword_weekendwork" behavior="0" />
       <RootComponent type="1" schemaName="lsw_tb_employee_weekendwork" behavior="0" />
-      <RootComponent type="1" schemaName="lsw_tb_weekendworkrequest" behavior="1" />
+      <RootComponent type="1" schemaName="lsw_tb_weekendworkrequest" behavior="0" />
       <RootComponent type="29" id="{84ba5b1d-e8e6-f111-84e9-7ced8db4dc95}" behavior="0" />
       <RootComponent type="431" schemaName="lsw_tb_employee_weekendwork lsw_user_image" behavior="0" />
       <RootComponent type="432" schemaName="lsw_tb_employee_weekendwork" behavior="0" />
     </RootComponents>
-    <MissingDependencies>
-      <MissingDependency>
-        <Required type="1" schemaName="lsw_tb_weekendworkrequest" displayName="TB_WeekendWorkRequest" solution="Active" />
-        <Dependent type="1" schemaName="lsw_tb_weekendworkrequest" displayName="TB_WeekendWorkRequest" />
-      </MissingDependency>
-      <MissingDependency>
-        <Required type="2" schemaName="lsw_requestname" displayName="requestname" parentSchemaName="lsw_tb_weekendworkrequest" parentDisplayName="TB_WeekendWorkRequest" solution="Active" />
-        <Dependent type="10" schemaName="lsw_tb_weekendworkrequest_lsw_tb_weekendworkrequest_lsw_PlannedRequest" displayName="lsw_tb_weekendworkrequest_lsw_tb_weekendworkrequest_lsw_PlannedRequest" parentSchemaName="lsw_tb_weekendworkrequest" parentDisplayName="TB_WeekendWorkRequest" />
-      </MissingDependency>
-    </MissingDependencies>
+    <MissingDependencies />
   </SolutionManifest>
 </ImportExportXml>
