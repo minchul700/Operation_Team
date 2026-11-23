@@ -1,0 +1,152 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_commondataserviceforapps": {
+        "impersonation": {},
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "lsw_weekendwork_dataverse"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "triggers": {
+        "manual": {
+          "type": "Request",
+          "kind": "PowerAppV2",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "text": {
+                  "title": "PassWord",
+                  "type": "string",
+                  "x-ms-dynamically-added": true,
+                  "description": "비밀번호",
+                  "x-ms-content-hint": "TEXT"
+                },
+                "text_1": {
+                  "title": "App_ID",
+                  "type": "string",
+                  "x-ms-dynamically-added": true,
+                  "description": "앱코드",
+                  "x-ms-content-hint": "TEXT"
+                },
+                "text_2": {
+                  "title": "Email",
+                  "type": "string",
+                  "x-ms-dynamically-added": true,
+                  "description": "이메일",
+                  "x-ms-content-hint": "TEXT"
+                }
+              },
+              "required": [
+                "text",
+                "text_1",
+                "text_2"
+              ]
+            }
+          },
+          "runtimeConfiguration": {
+            "secureData": {
+              "properties": [
+                "inputs",
+                "outputs"
+              ]
+            }
+          }
+        }
+      },
+      "actions": {
+        "FindAdmins": {
+          "runAfter": {},
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "ListRecords"
+            },
+            "parameters": {
+              "entityName": "lsw_tb_adminpassword_weekendworks",
+              "$filter": "lsw_app_id eq 'WeekendWork'",
+              "$select": "lsw_email,lsw_password",
+              "$top": 100
+            },
+            "authentication": "@parameters('$authentication')"
+          },
+          "runtimeConfiguration": {
+            "secureData": {
+              "properties": [
+                "inputs",
+                "outputs"
+              ]
+            }
+          }
+        },
+        "MatchAdmin": {
+          "runAfter": {
+            "FindAdmins": [
+              "Succeeded"
+            ]
+          },
+          "type": "Query",
+          "inputs": {
+            "from": "@outputs('FindAdmins')?['body/value']",
+            "where": "@and(equals(toLower(coalesce(item()?['lsw_email'],'')),toLower(coalesce(triggerBody()?['text_2'],''))),equals(coalesce(item()?['lsw_password'],''),triggerBody()?['text']))"
+          },
+          "runtimeConfiguration": {
+            "secureData": {
+              "properties": [
+                "inputs",
+                "outputs"
+              ]
+            }
+          }
+        },
+        "ReturnResult": {
+          "runAfter": {
+            "MatchAdmin": [
+              "Succeeded"
+            ]
+          },
+          "type": "Response",
+          "kind": "PowerApp",
+          "inputs": {
+            "statusCode": 200,
+            "body": {
+              "right": "@if(and(equals(triggerBody()?['text_1'],'WeekendWork'),not(empty(triggerBody()?['text'])),greater(length(body('MatchAdmin')),0)),'True','False')"
+            },
+            "schema": {
+              "type": "object",
+              "properties": {
+                "right": {
+                  "title": "Right",
+                  "x-ms-dynamically-added": true,
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "templateName": null
+  },
+  "schemaVersion": "1.0.0.0"
+}

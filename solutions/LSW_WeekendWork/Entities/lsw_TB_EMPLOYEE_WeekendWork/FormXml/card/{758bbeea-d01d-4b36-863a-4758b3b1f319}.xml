@@ -1,0 +1,121 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <systemform>
+    <formid>{758bbeea-d01d-4b36-863a-4758b3b1f319}</formid>
+    <IntroducedVersion>1.0</IntroducedVersion>
+    <FormPresentation>1</FormPresentation>
+    <FormActivationState>1</FormActivationState>
+    <form>
+      <tabs>
+        <tab name="general" verticallayout="true" id="{53420DB2-9E72-4334-862D-E5694E1A1B53}" IsUserDefined="0">
+          <labels>
+            <label description="" languagecode="1042" />
+          </labels>
+          <columns>
+            <column width="25%">
+              <sections>
+                <section name="ColorStrip" showlabel="false" showbar="false" columns="1" IsUserDefined="0" id="{F4E9A742-1B49-48DA-A7BB-E881CF30BC72}">
+                  <labels>
+                    <label description="ColorStrip" languagecode="1042" />
+                  </labels>
+                </section>
+              </sections>
+            </column>
+            <column width="75%">
+              <sections>
+                <section name="CardHeader" showlabel="false" showbar="false" columns="111" id="{B4422983-1113-466D-A549-BD7768ACACDA}" IsUserDefined="0">
+                  <labels>
+                    <label description="Header" languagecode="1033" />
+                    <label description="머리글" languagecode="1042" />
+                  </labels>
+                  <rows>
+                    <row>
+                      <cell id="{22ED5C8B-B4FC-44EF-A31F-88487857C149}" showlabel="true" locklevel="0">
+                        <labels>
+                          <label description="상태 설명" languagecode="1042" />
+                          <label description="Status Reason" languagecode="1033" />
+                        </labels>
+                        <control id="statuscode" classid="{5D68B988-0661-4db2-BC3E-17598AD3BE6C}" datafieldname="statuscode" disabled="false" />
+                      </cell>
+                      <cell id="{66A7A293-4021-43D9-B1E4-CAF7C56AA7A8}" showlabel="true" locklevel="0">
+                        <labels>
+                          <label description="" languagecode="1042" />
+                        </labels>
+                      </cell>
+                      <cell id="{05E62F8F-0E29-45DB-9AB2-14A9D54DD014}" showlabel="true" locklevel="0">
+                        <labels>
+                          <label description="" languagecode="1042" />
+                        </labels>
+                      </cell>
+                    </row>
+                  </rows>
+                </section>
+                <section name="CardDetails" showlabel="false" showbar="false" columns="1" id="{BFC3FEEF-FE35-4C7E-8C5D-60A9E5B963F9}" IsUserDefined="0">
+                  <labels>
+                    <label description="Details" languagecode="1033" />
+                    <label description="자세히" languagecode="1042" />
+                  </labels>
+                  <rows>
+                    <row>
+                      <cell id="{388FD64E-65D8-4A03-B327-3F2B687253AE}" showlabel="true" locklevel="0">
+                        <labels>
+                          <label description="emp_id" languagecode="1042" />
+                          <label description="emp_id" languagecode="1033" />
+                        </labels>
+                        <control id="lsw_emp_id" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="lsw_emp_id" disabled="false" />
+                      </cell>
+                    </row>
+                  </rows>
+                </section>
+                <section name="CardFooter" showlabel="false" columns="1111" showbar="false" id="{A5AE2FDA-827D-4B73-B050-0243CD9EC1C9}" IsUserDefined="0">
+                  <labels>
+                    <label description="Footer" languagecode="1033" />
+                    <label description="바닥글" languagecode="1042" />
+                  </labels>
+                  <rows>
+                    <row>
+                      <cell id="{C92AE74A-7930-4423-A2E9-6C6CAE5062DA}" showlabel="true" locklevel="0">
+                        <labels>
+                          <label description="담당자" languagecode="1042" />
+                          <label description="Owner" languagecode="1033" />
+                        </labels>
+                        <control id="ownerid" classid="{270BD3DB-D9AF-4782-9025-509E298DEC0A}" datafieldname="ownerid" disabled="false" />
+                      </cell>
+                      <cell id="{C2B2F581-AE3E-41AA-88F8-6232064A3B69}" showlabel="true" locklevel="0">
+                        <labels>
+                          <label description="만든 날짜" languagecode="1042" />
+                          <label description="Created On" languagecode="1033" />
+                        </labels>
+                        <control id="createdon" classid="{270BD3DB-D9AF-4782-9025-509E298DEC0A}" datafieldname="createdon" disabled="false" />
+                      </cell>
+                      <cell id="{DCF5BB21-3795-494D-9082-18FCFA9711DD}" showlabel="true" locklevel="0">
+                        <labels>
+                          <label description="" languagecode="1042" />
+                        </labels>
+                      </cell>
+                      <cell id="{5D68AB9F-8E91-4608-84CC-E1A214900E7E}" showlabel="true" locklevel="0">
+                        <labels>
+                          <label description="" languagecode="1042" />
+                        </labels>
+                      </cell>
+                    </row>
+                  </rows>
+                </section>
+              </sections>
+            </column>
+          </columns>
+        </tab>
+      </tabs>
+    </form>
+    <IsCustomizable>1</IsCustomizable>
+    <CanBeDeleted>1</CanBeDeleted>
+    <LocalizedNames>
+      <LocalizedName description="Information" languagecode="1033" />
+      <LocalizedName description="정보" languagecode="1042" />
+    </LocalizedNames>
+    <Descriptions>
+      <Description description="A card form for this entity." languagecode="1033" />
+      <Description description="이 엔터티의 카드 양식." languagecode="1042" />
+    </Descriptions>
+  </systemform>
+</forms>

@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<savedqueries xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <savedquery>
+    <IsCustomizable>1</IsCustomizable>
+    <CanBeDeleted>0</CanBeDeleted>
+    <isquickfindquery>0</isquickfindquery>
+    <isprivate>0</isprivate>
+    <isdefault>1</isdefault>
+    <savedqueryid>{aa25cac2-f5d7-42d1-8dac-337e4b4d058c}</savedqueryid>
+    <layoutxml>
+      <grid name="lsw_tb_adminpassword_weekendworks" jump="lsw_app_id" select="1" icon="1" preview="0">
+        <row name="lsw_tb_adminpassword_weekendwork" id="lsw_tb_adminpassword_weekendworkid">
+          <cell name="lsw_app_id" width="300" />
+          <cell name="createdon" width="125" />
+        </row>
+      </grid>
+    </layoutxml>
+    <querytype>64</querytype>
+    <fetchxml>
+      <fetch version="1.0" mapping="logical">
+        <entity name="lsw_tb_adminpassword_weekendwork">
+          <attribute name="lsw_tb_adminpassword_weekendworkid" />
+          <attribute name="lsw_app_id" />
+          <attribute name="createdon" />
+          <filter type="and">
+            <condition attribute="statecode" operator="eq" value="0" />
+          </filter>
+        </entity>
+      </fetch>
+    </fetchxml>
+    <IntroducedVersion>1.0.0.0</IntroducedVersion>
+    <LocalizedNames>
+      <LocalizedName description="TB_AdminPassword_WeekendWork 조회 보기" languagecode="1042" />
+    </LocalizedNames>
+  </savedquery>
+</savedqueries>

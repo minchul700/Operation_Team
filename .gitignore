@@ -1,0 +1,9 @@
+.env
+.env.*
+!.env.example
+**/node_modules/
+**/.venv/
+**/playwright-report/
+**/test-results/
+*.zip
+*.msapp

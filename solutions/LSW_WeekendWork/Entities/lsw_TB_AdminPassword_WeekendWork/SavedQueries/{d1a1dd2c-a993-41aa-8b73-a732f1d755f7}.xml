@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<savedqueries xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <savedquery>
+    <IsCustomizable>1</IsCustomizable>
+    <CanBeDeleted>0</CanBeDeleted>
+    <isquickfindquery>1</isquickfindquery>
+    <isprivate>0</isprivate>
+    <isdefault>1</isdefault>
+    <savedqueryid>{d1a1dd2c-a993-41aa-8b73-a732f1d755f7}</savedqueryid>
+    <layoutxml>
+      <grid name="resultset" jump="lsw_app_id" select="1" icon="1" preview="1">
+        <row name="result" id="lsw_tb_adminpassword_weekendworkid">
+          <cell name="lsw_app_id" width="300" />
+          <cell name="createdon" width="125" />
+        </row>
+      </grid>
+    </layoutxml>
+    <querytype>4</querytype>
+    <fetchxml>
+      <fetch version="1.0" mapping="logical">
+        <entity name="lsw_tb_adminpassword_weekendwork">
+          <attribute name="lsw_tb_adminpassword_weekendworkid" />
+          <attribute name="lsw_app_id" />
+          <attribute name="createdon" />
+          <order attribute="lsw_app_id" descending="false" />
+          <filter type="and">
+            <condition attribute="statecode" operator="eq" value="0" />
+          </filter>
+          <filter type="or" isquickfindfields="1">
+            <condition attribute="lsw_app_id" operator="like" value="{0}" />
+          </filter>
+        </entity>
+      </fetch>
+    </fetchxml>
+    <IntroducedVersion>1.0.0.0</IntroducedVersion>
+    <LocalizedNames>
+      <LocalizedName description="활성 TB_AdminPassword_WeekendWork의 빠른 찾기" languagecode="1042" />
+    </LocalizedNames>
+  </savedquery>
+</savedqueries>

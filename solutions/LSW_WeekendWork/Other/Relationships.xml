@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<EntityRelationships xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <EntityRelationship Name="business_unit_lsw_tb_adminpassword_weekendwork" />
+  <EntityRelationship Name="business_unit_lsw_tb_employee_weekendwork" />
+  <EntityRelationship Name="lk_lsw_tb_adminpassword_weekendwork_createdby" />
+  <EntityRelationship Name="lk_lsw_tb_adminpassword_weekendwork_modifiedby" />
+  <EntityRelationship Name="lk_lsw_tb_employee_weekendwork_createdby" />
+  <EntityRelationship Name="lk_lsw_tb_employee_weekendwork_modifiedby" />
+  <EntityRelationship Name="lsw_tb_employee_weekendwork_lsw_tb_weekendworkrequest_lsw_Employee" />
+  <EntityRelationship Name="lsw_tb_weekendworkrequest_lsw_tb_weekendworkrequest_lsw_PlannedRequest" />
+  <EntityRelationship Name="owner_lsw_tb_adminpassword_weekendwork" />
+  <EntityRelationship Name="owner_lsw_tb_employee_weekendwork" />
+  <EntityRelationship Name="team_lsw_tb_adminpassword_weekendwork" />
+  <EntityRelationship Name="team_lsw_tb_employee_weekendwork" />
+  <EntityRelationship Name="TransactionCurrency_lsw_TB_EMPLOYEE_WeekendWork" />
+  <EntityRelationship Name="user_lsw_tb_adminpassword_weekendwork" />
+  <EntityRelationship Name="user_lsw_tb_employee_weekendwork" />
+</EntityRelationships>

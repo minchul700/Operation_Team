@@ -1,0 +1,59 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <systemform>
+    <formid>{3489bc59-1052-4e12-bfb2-f4c972dd87dc}</formid>
+    <IntroducedVersion>1.0.0.0</IntroducedVersion>
+    <FormPresentation>1</FormPresentation>
+    <FormActivationState>1</FormActivationState>
+    <form>
+      <tabs>
+        <tab verticallayout="true" id="{dc4be746-d73c-4c03-b4cf-a1c181805819}" IsUserDefined="1">
+          <labels>
+            <label description="General" languagecode="1033" />
+            <label description="일반" languagecode="1042" />
+          </labels>
+          <columns>
+            <column width="100%">
+              <sections>
+                <section showlabel="false" showbar="false" IsUserDefined="0" id="{5abd24be-eaf8-4c46-995a-dba85d371837}">
+                  <labels>
+                    <label description="General" languagecode="1033" />
+                    <label description="일반" languagecode="1042" />
+                  </labels>
+                  <rows>
+                    <row>
+                      <cell id="{798a80b4-5b9e-4cc6-9a6b-624ed4cde23d}">
+                        <labels>
+                          <label description="App_ID" languagecode="1042" />
+                          <label description="App_ID" languagecode="1033" />
+                        </labels>
+                        <control id="lsw_app_id" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="lsw_app_id" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{1b4e7a17-6b9e-4127-99e0-ec1b9b7ea533}">
+                        <labels>
+                          <label description="담당자" languagecode="1042" />
+                          <label description="Owner" languagecode="1033" />
+                        </labels>
+                        <control id="ownerid" classid="{270BD3DB-D9AF-4782-9025-509E298DEC0A}" datafieldname="ownerid" />
+                      </cell>
+                    </row>
+                  </rows>
+                </section>
+              </sections>
+            </column>
+          </columns>
+        </tab>
+      </tabs>
+    </form>
+    <IsCustomizable>1</IsCustomizable>
+    <CanBeDeleted>1</CanBeDeleted>
+    <LocalizedNames>
+      <LocalizedName description="정보" languagecode="1042" />
+    </LocalizedNames>
+    <Descriptions>
+      <Description description="이 엔터티의 양식입니다." languagecode="1042" />
+    </Descriptions>
+  </systemform>
+</forms>
