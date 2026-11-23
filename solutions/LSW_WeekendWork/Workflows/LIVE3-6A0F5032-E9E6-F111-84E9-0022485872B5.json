@@ -65,7 +65,7 @@
               "operationId": "SubscribeWebhookTrigger"
             },
             "parameters": {
-              "subscriptionRequest/message": 4,
+              "subscriptionRequest/message": 1,
               "subscriptionRequest/entityname": "lsw_tb_weekendworkrequest",
               "subscriptionRequest/scope": 4
             },
