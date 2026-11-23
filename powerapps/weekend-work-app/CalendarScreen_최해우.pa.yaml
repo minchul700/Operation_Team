@@ -173,12 +173,13 @@ Screens:
                         BorderThickness: =1
                         Fill: =RGBA(255, 255, 255, 1)
                         FillPortions: =0
-                        Height: =148
+                        Height: =172
                         LayoutAlignItems: =LayoutAlignItems.Stretch
                         LayoutDirection: =LayoutDirection.Vertical
                         LayoutGap: =8
                         LayoutMinHeight: =0
                         LayoutMinWidth: =0
+                        LayoutOverflowY: =LayoutOverflow.Scroll
                         PaddingBottom: =24
                         PaddingLeft: =24
                         PaddingRight: =24
@@ -191,7 +192,7 @@ Screens:
                         - S5GuidanceMessage:
                             Control: ModernText
                             Properties:
-                              AccessibleLabel: ="일정 정보는 주말근무 데이터 연결 후 표시됩니다."
+                              AccessibleLabel: ="선택한 날짜의 본인 주말근무 신청 내역"
                               AlignInContainer: =AlignInContainer.Stretch
                               AutoHeight: =true
                               Color: =RGBA(50, 60, 75, 1)
@@ -202,7 +203,20 @@ Screens:
                               PaddingRight: =0
                               PaddingTop: =0
                               Size: =16
-                              Text: ="일정 정보는 주말근무 데이터 연결 후 표시됩니다."
+                              Text: |-
+                                =With(
+                                    {selectedDay: Coalesce(varSelectedCalendarDate, Today())},
+                                    Text(selectedDay, "yyyy년 m월 d일") & Char(10) &
+                                    If(
+                                        IsBlank(LookUp(TB_WeekendWorkRequests, lsw_applicantemail = User().Email && lsw_workdate = selectedDay)),
+                                        "신청 내역이 없습니다.",
+                                        Concat(
+                                            Filter(TB_WeekendWorkRequests, lsw_applicantemail = User().Email && lsw_workdate = selectedDay),
+                                            If(lsw_requesttype = "Planned", "예정", "완료") & " · " & Coalesce(lsw_projectname, "프로젝트 미입력") & " · " & Coalesce(lsw_approvalstatus, "접수"),
+                                            Char(10)
+                                        )
+                                    )
+                                )
                   - S5CalendarCard:
                       Control: GroupContainer
                       Variant: AutoLayout
@@ -404,6 +418,7 @@ Screens:
                               LayoutMinHeight: =264
                               LayoutMinWidth: =0
                               ShowScrollbar: =false
+                              TabIndex: =0
                               TemplatePadding: =2
                               TemplateSize: =44
                               Width: =Parent.Width
@@ -412,7 +427,13 @@ Screens:
                               - S5CalendarDay:
                                   Control: ModernText
                                   Properties:
-                                    AccessibleLabel: =Text(ThisItem.CalendarDate, "yyyy년 m월 d일") & If(ThisItem.CalendarDate = varSelectedCalendarDate, ", 선택됨", "")
+                                    AccessibleLabel: |-
+                                      =With(
+                                          {day: ThisItem.CalendarDate},
+                                          Text(day, "yyyy년 m월 d일") &
+                                          If(IsBlank(LookUp(TB_WeekendWorkRequests, lsw_applicantemail = User().Email && lsw_workdate = day)), "", ", 신청 있음") &
+                                          If(day = varSelectedCalendarDate, ", 선택됨", "")
+                                      )
                                     Align: =Align.Center
                                     BorderColor: =RGBA(35, 95, 195, 1)
                                     BorderThickness: =If(ThisItem.CalendarDate = varSelectedCalendarDate, 2, 0)
@@ -426,11 +447,17 @@ Screens:
                                     RadiusBottomRight: =6
                                     RadiusTopLeft: =6
                                     RadiusTopRight: =6
-                                    Text: =Text(ThisItem.CalendarDate, "d")
+                                    Text: |-
+                                      =With(
+                                          {day: ThisItem.CalendarDate},
+                                          Text(day, "d") &
+                                          If(IsBlank(LookUp(TB_WeekendWorkRequests, lsw_applicantemail = User().Email && lsw_workdate = day)), "", " •")
+                                      )
                                     Width: =Parent.TemplateWidth
                               - S5SelectedDateOutline:
                                   Control: ModernText
                                   Properties:
+                                    AccessibleLabel: ="선택한 날짜 테두리"
                                     BorderColor: =RGBA(35, 95, 195, 1)
                                     BorderThickness: =2
                                     Fill: =RGBA(0, 0, 0, 0)

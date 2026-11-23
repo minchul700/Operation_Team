@@ -343,17 +343,18 @@ Screens:
                               PaddingRight: =0
                               PaddingTop: =0
                               Size: =14
-                              Text: ="신청자 이름"
+                              Text: ="신청자 (자동 확인)"
                               Width: =Parent.Width
                               Wrap: =false
                         - S3NameInput:
                             Control: ModernTextInput
                             Properties:
-                              AccessibleLabel: ="신청자 이름"
+                              AccessibleLabel: ="로그인 계정의 직원 정보로 자동 확인되는 신청자 이름"
                               AlignInContainer: =AlignInContainer.Stretch
+                              Default: =User().FullName
+                              DisplayMode: =DisplayMode.Disabled
                               Height: =44
-                              Placeholder: ="이름을 입력하세요"
-                              Required: =true
+                              Placeholder: ="로그인 계정의 직원 정보로 자동 확인"
                               Width: =Parent.Width
                         - S3TeamLabel:
                             Control: ModernText
@@ -367,7 +368,7 @@ Screens:
                               PaddingRight: =0
                               PaddingTop: =0
                               Size: =14
-                              Text: ="소속 / 팀"
+                              Text: ="소속 / 팀 (선택)"
                               Width: =Parent.Width
                               Wrap: =false
                         - S3TeamInput:
@@ -375,9 +376,16 @@ Screens:
                             Properties:
                               AccessibleLabel: ="소속 또는 팀"
                               AlignInContainer: =AlignInContainer.Stretch
+                              Default: |-
+                                =With(
+                                    {userRows: Filter(Orgnization_Chart_Department_User_List, UserEmail = User().Email)},
+                                    With(
+                                        {orgRow: LookUp(userRows, EndsWith(Title, " 팀원") || EndsWith(Title, " Leader"))},
+                                        If(IsBlank(orgRow), "", Trim(Substitute(Substitute(orgRow.Title, " 팀원", ""), " Leader", "")))
+                                    )
+                                )
                               Height: =44
-                              Placeholder: ="소속 또는 팀을 입력하세요"
-                              Required: =true
+                              Placeholder: ="승인 경로는 조직도 기준입니다"
                               Width: =Parent.Width
                         - S3ActualDateLabel:
                             Control: ModernText
@@ -725,16 +733,76 @@ Screens:
                         - S3SubmitButton:
                             Control: ModernButton
                             Properties:
-                              AccessibleLabel: ="제출, 현재 비활성화됨"
+                              AccessibleLabel: ="완료 주말근무 신청 제출"
                               AlignInContainer: =AlignInContainer.Stretch
-                              DisplayMode: =DisplayMode.Disabled
                               Height: =48
+                              OnSelect: |-
+                                =With(
+                                    {
+                                        startTime: IfError(TimeValue(Trim(S3StartInput.Text)), Blank()),
+                                        endTime: IfError(TimeValue(Trim(S3EndInput.Text)), Blank())
+                                    },
+                                    With(
+                                        {
+                                            workMinutes: If(
+                                                Or(IsBlank(startTime), IsBlank(endTime)),
+                                                0,
+                                                DateDiff(startTime, endTime, TimeUnit.Minutes) + If(endTime < startTime, 1440, 0)
+                                            )
+                                        },
+                                        If(
+                                            Or(
+                                                IsBlank(S3ActualDateInput.SelectedDate),
+                                                IsBlank(Trim(S3ProjectInput.Text)),
+                                                IsBlank(Trim(S3LocationInput.Text)),
+                                                IsBlank(Trim(S3DetailInput.Text)),
+                                                IsBlank(Trim(S3StartInput.Text)),
+                                                IsBlank(Trim(S3EndInput.Text))
+                                            ),
+                                            Notify("필수 항목을 모두 입력해 주세요.", NotificationType.Error),
+                                            Or(
+                                                Not(IsMatch(Trim(S3StartInput.Text), "^([01][0-9]|2[0-3]):[0-5][0-9]$")),
+                                                Not(IsMatch(Trim(S3EndInput.Text), "^([01][0-9]|2[0-3]):[0-5][0-9]$"))
+                                            ),
+                                            Notify("시작·종료 시각은 24시간제 HH:mm 형식으로 입력해 주세요.", NotificationType.Error),
+                                            workMinutes <= 0,
+                                            Notify("근무 시간은 0분보다 길어야 합니다.", NotificationType.Error),
+                                            IfError(
+                                                Patch(
+                                                    TB_WeekendWorkRequests,
+                                                    Defaults(TB_WeekendWorkRequests),
+                                                    {
+                                                        lsw_requestname: "완료-" & Text(S3ActualDateInput.SelectedDate, "yyyymmdd") & "-" & Left(Text(GUID()), 8),
+                                                        lsw_requesttype: "Completed",
+                                                        lsw_department: Trim(S3TeamInput.Text),
+                                                        lsw_workdate: S3ActualDateInput.SelectedDate,
+                                                        lsw_startat: Trim(S3StartInput.Text),
+                                                        lsw_endat: Trim(S3EndInput.Text),
+                                                        lsw_workminutes: workMinutes,
+                                                        lsw_projectname: Trim(S3ProjectInput.Text),
+                                                        lsw_worklocation: Trim(S3LocationInput.Text),
+                                                        lsw_reason: Trim(S3DetailInput.Text),
+                                                        lsw_details: Trim(S3DetailInput.Text)
+                                                    }
+                                                );
+                                                Refresh(TB_WeekendWorkRequests);
+                                                Reset(S3ProjectInput);
+                                                Reset(S3LocationInput);
+                                                Reset(S3DetailInput);
+                                                Reset(S3StartInput);
+                                                Reset(S3EndInput);
+                                                Notify("완료 주말근무 신청을 저장했습니다.", NotificationType.Success),
+                                                Notify("신청 저장에 실패했습니다. 다시 시도해 주세요.", NotificationType.Error)
+                                            )
+                                        )
+                                    )
+                                )
                               Text: ="제출"
                               Width: =Parent.Width
                         - S3NoSaveNote:
                             Control: ModernText
                             Properties:
-                              AccessibleLabel: ="제출 및 저장 기능이 연결되지 않았음을 안내합니다"
+                              AccessibleLabel: ="신청 저장과 승인 상태 조회 안내"
                               AlignInContainer: =AlignInContainer.Stretch
                               Color: =RGBA(91, 99, 109, 1)
                               Height: =40
@@ -743,5 +811,5 @@ Screens:
                               PaddingRight: =0
                               PaddingTop: =0
                               Size: =14
-                              Text: ="제출 및 저장 기능은 아직 연결되지 않았습니다."
+                              Text: ="제출한 신청은 저장되며 승인 상태는 신청 조회에서 확인할 수 있습니다."
                               Width: =Parent.Width

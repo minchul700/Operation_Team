@@ -24,6 +24,7 @@
   <optionsets />
   <CustomControls />
   <EntityDataProviders />
+  <CanvasApps />
   <connectionreferences>
     <connectionreference connectionreferencelogicalname="lsw_weekendwork_approvals">
       <connectionreferencedisplayname>WeekendWork Approvals</connectionreferencedisplayname>

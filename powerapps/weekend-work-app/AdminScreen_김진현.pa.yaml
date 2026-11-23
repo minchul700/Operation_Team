@@ -2,6 +2,10 @@ Screens:
   AdminScreen_김진현:
     Properties:
       Fill: =RGBA(246, 247, 249, 1)
+      OnVisible: |-
+        =Set(varWeekendAdminAuthenticated, false);
+        Set(varWeekendAdminStatusFilter, "");
+        Set(varSelectedAdminRequest, Blank())
     Children:
       - S6Root:
           Control: GroupContainer
@@ -274,7 +278,7 @@ Screens:
                               PaddingRight: =0
                               PaddingTop: =0
                               Size: =24
-                              Text: ="관리자 조회 -> 기존내부앱처럼 비밀번호 기능 추가"
+                              Text: ="관리자 조회"
                               Width: =Parent.Width
                               Wrap: =false
                         - S6Subtitle:
@@ -289,7 +293,7 @@ Screens:
                               PaddingRight: =0
                               PaddingTop: =0
                               Size: =14
-                              Text: ="관리자 기능 연결 안내"
+                              Text: ="관리자 인증 후 주말근무 신청과 승인 상태를 확인합니다."
                               Width: =Parent.Width
                   - S6GuidanceCard:
                       Control: GroupContainer
@@ -299,7 +303,7 @@ Screens:
                         BorderThickness: =1
                         Fill: =RGBA(255, 255, 255, 1)
                         FillPortions: =0
-                        Height: =176
+                        Height: =270
                         LayoutAlignItems: =LayoutAlignItems.Center
                         LayoutDirection: =LayoutDirection.Vertical
                         LayoutGap: =12
@@ -314,6 +318,7 @@ Screens:
                         RadiusBottomRight: =8
                         RadiusTopLeft: =8
                         RadiusTopRight: =8
+                        Visible: =!varWeekendAdminAuthenticated
                         Width: =Parent.Width
                       Children:
                         - S6GuidanceTitle:
@@ -329,24 +334,222 @@ Screens:
                               PaddingRight: =0
                               PaddingTop: =0
                               Size: =18
-                              Text: ="관리 기능 안내"
+                              Text: ="관리자 로그인"
                               Width: =Parent.Width
                               Wrap: =false
                         - S6GuidanceMessage:
                             Control: ModernText
                             Properties:
-                              AccessibleLabel: ="관리자 기능은 데이터와 업무 절차 연결 후 이용할 수 있습니다."
+                              AccessibleLabel: ="주말근무 관리자 인증 안내"
                               Align: =Align.Center
                               AlignInContainer: =AlignInContainer.Stretch
                               Color: =RGBA(61, 69, 79, 1)
-                              Height: =64
+                              Height: =36
                               PaddingBottom: =0
                               PaddingLeft: =0
                               PaddingRight: =0
                               PaddingTop: =0
                               Size: =16
+                              Text: ="회사 이메일과 관리자 비밀번호로 인증하세요."
+                              Width: =Parent.Width
+                        - S6AdminPasswordInput:
+                            Control: ModernTextInput
+                            Properties:
+                              AccessibleLabel: ="관리자 비밀번호"
+                              Height: =44
+                              LayoutMinWidth: =0
+                              Placeholder: ="비밀번호"
+                              Type: =TextInputType.Password
+                              Width: =Parent.Width
+                        - S6AdminLoginButton:
+                            Control: ModernButton
+                            Properties:
+                              AccessibleLabel: ="관리자 인증"
+                              Height: =44
+                              Layout: =ButtonLayout.TextOnly
+                              OnSelect: |-
+                                =If(
+                                    IsBlank(S6AdminPasswordInput.Text),
+                                    Notify("관리자 비밀번호를 입력하세요.", NotificationType.Warning),
+                                    IfError(
+                                        Set(varWeekendAdminAuthResult, '[LIVE][주말근무]관리자인증'.Run(S6AdminPasswordInput.Text, "WeekendWork", User().Email));
+                                        If(
+                                            varWeekendAdminAuthResult.right = "True",
+                                            Set(varWeekendAdminAuthenticated, true);
+                                            Reset(S6AdminPasswordInput);
+                                            Refresh(TB_WeekendWorkRequests),
+                                            Notify("인증 정보가 일치하지 않습니다.", NotificationType.Error)
+                                        ),
+                                        Notify("관리자 인증 흐름을 실행할 수 없습니다.", NotificationType.Error)
+                                    )
+                                )
+                              Text: ="로그인"
+                              Width: =Parent.Width
+                  - S6AdminDataCard:
+                      Control: GroupContainer
+                      Variant: AutoLayout
+                      Properties:
+                        BorderColor: =RGBA(224, 228, 233, 1)
+                        BorderThickness: =1
+                        Fill: =RGBA(255, 255, 255, 1)
+                        FillPortions: =0
+                        Height: =760
+                        LayoutAlignItems: =LayoutAlignItems.Stretch
+                        LayoutDirection: =LayoutDirection.Vertical
+                        LayoutGap: =10
+                        LayoutMinHeight: =0
+                        LayoutMinWidth: =0
+                        PaddingBottom: =20
+                        PaddingLeft: =20
+                        PaddingRight: =20
+                        PaddingTop: =20
+                        RadiusBottomLeft: =8
+                        RadiusBottomRight: =8
+                        RadiusTopLeft: =8
+                        RadiusTopRight: =8
+                        Visible: =varWeekendAdminAuthenticated
+                        Width: =Parent.Width
+                      Children:
+                        - S6AdminListTitle:
+                            Control: ModernText
+                            Properties:
+                              AccessibleLabel: ="주말근무 신청 관리 목록"
+                              Color: =RGBA(32, 39, 48, 1)
+                              FontWeight: =FontWeight.Semibold
+                              Size: =20
+                              Text: ="신청 현황"
+                              Width: =Parent.Width
+                        - S6AdminSearchInput:
+                            Control: ModernTextInput
+                            Properties:
+                              AccessibleLabel: ="신청자 또는 프로젝트 검색"
+                              Height: =44
+                              LayoutMinWidth: =0
+                              Placeholder: ="신청자 또는 프로젝트 검색"
+                              Width: =Parent.Width
+                        - S6AdminFilterRow:
+                            Control: GroupContainer
+                            Variant: AutoLayout
+                            Properties:
+                              FillPortions: =0
+                              Height: =42
+                              LayoutAlignItems: =LayoutAlignItems.Stretch
+                              LayoutDirection: =LayoutDirection.Horizontal
+                              LayoutGap: =8
+                              LayoutMinHeight: =0
+                              LayoutMinWidth: =0
+                              Width: =Parent.Width
+                            Children:
+                              - S6FilterAll:
+                                  Control: ModernButton
+                                  Properties:
+                                    AccessibleLabel: ="전체 신청 조회"
+                                    FillPortions: =1
+                                    OnSelect: =Set(varWeekendAdminStatusFilter, "")
+                                    Text: ="전체"
+                              - S6FilterPending:
+                                  Control: ModernButton
+                                  Properties:
+                                    AccessibleLabel: ="승인 대기 신청 조회"
+                                    FillPortions: =1
+                                    OnSelect: =Set(varWeekendAdminStatusFilter, "Pending")
+                                    Text: ="대기"
+                              - S6FilterApproved:
+                                  Control: ModernButton
+                                  Properties:
+                                    AccessibleLabel: ="승인 완료 신청 조회"
+                                    FillPortions: =1
+                                    OnSelect: =Set(varWeekendAdminStatusFilter, "Approved")
+                                    Text: ="승인"
+                              - S6FilterRejected:
+                                  Control: ModernButton
+                                  Properties:
+                                    AccessibleLabel: ="반려 신청 조회"
+                                    FillPortions: =1
+                                    OnSelect: =Set(varWeekendAdminStatusFilter, "Rejected")
+                                    Text: ="반려"
+                        - S6AdminRefreshButton:
+                            Control: ModernButton
+                            Properties:
+                              AccessibleLabel: ="신청 목록 새로고침"
+                              Appearance: =ButtonAppearance.Secondary
+                              Height: =40
+                              Layout: =ButtonLayout.TextOnly
+                              OnSelect: =Refresh(TB_WeekendWorkRequests)
+                              Text: ="새로고침"
+                              Width: =130
+                        - S6AdminRequestList:
+                            Control: Gallery
+                            Variant: Vertical
+                            Properties:
+                              AccessibleLabel: ="최신 신청 목록"
+                              FillPortions: =0
+                              Height: =330
+                              Items: |-
+                                =SortByColumns(
+                                    Filter(
+                                        TB_WeekendWorkRequests,
+                                        IsBlank(varWeekendAdminStatusFilter) || lsw_approvalstatus = varWeekendAdminStatusFilter,
+                                        IsBlank(S6AdminSearchInput.Text) || StartsWith(lsw_applicantname, S6AdminSearchInput.Text) || StartsWith(lsw_projectname, S6AdminSearchInput.Text)
+                                    ),
+                                    "createdon",
+                                    SortOrder.Descending
+                                )
+                              LayoutMinHeight: =300
+                              LayoutMinWidth: =0
+                              TabIndex: =0
+                              TemplatePadding: =4
+                              TemplateSize: =72
+                              Width: =Parent.Width
+                            Children:
+                              - S6AdminRequestSummary:
+                                  Control: ModernText
+                                  Properties:
+                                    AccessibleLabel: ="신청 요약"
+                                    Color: =Switch(ThisItem.lsw_approvalstatus, "Approved", RGBA(20, 120, 75, 1), "Rejected", RGBA(190, 65, 65, 1), "Pending", RGBA(165, 105, 20, 1), RGBA(60, 70, 85, 1))
+                                    Height: =Parent.TemplateHeight
+                                    PaddingLeft: =12
+                                    Size: =14
+                                    Text: =Coalesce(ThisItem.lsw_applicantname, "처리 중") & " | " & Text(ThisItem.lsw_workdate, "yyyy-mm-dd") & " | " & Coalesce(ThisItem.lsw_approvalstatus, "처리 중") & Char(10) & Coalesce(ThisItem.lsw_projectname, "")
+                                    Width: =Parent.TemplateWidth
+                              - S6AdminRequestSelect:
+                                  Control: ModernButton
+                                  Properties:
+                                    AccessibleLabel: ="신청 상세 선택"
+                                    Appearance: =ButtonAppearance.Transparent
+                                    Height: =Parent.TemplateHeight
+                                    Layout: =ButtonLayout.TextOnly
+                                    OnSelect: =Set(varSelectedAdminRequest, ThisItem)
+                                    Text: =""
+                                    Width: =Parent.TemplateWidth
+                        - S6AdminDetailTitle:
+                            Control: ModernText
+                            Properties:
+                              AccessibleLabel: ="선택한 신청 상세"
+                              Color: =RGBA(32, 39, 48, 1)
+                              FontWeight: =FontWeight.Semibold
+                              Height: =28
+                              Size: =18
+                              Text: ="신청 상세"
+                              Width: =Parent.Width
+                        - S6AdminRequestDetail:
+                            Control: ModernText
+                            Properties:
+                              AccessibleLabel: ="선택한 신청의 근무 내용과 승인 결과"
+                              Color: =RGBA(61, 69, 79, 1)
+                              Height: =130
+                              Size: =14
                               Text: |-
-                                ="관리자 기능은 데이터와 업무 절차 연결 후 이용할 수 있습니다.
-
-                                승인, 반려 조회 필터화면 / 최신순 / 반려사유 / 이름별 조회 / 엑셀다운ㄹ드 기능 / 반려승인 메일발송 / 날짜별 조ㅎ회 / 승인자별 반려, 승인 status가능하면 추가 / 승인,대기,완료 ui는 휴가앱과 동일한 색상"
+                                =If(
+                                    IsBlank(varSelectedAdminRequest),
+                                    "목록에서 신청을 선택하세요.",
+                                    "신청자: " & Coalesce(varSelectedAdminRequest.lsw_applicantname, "확인 중") & Char(10) &
+                                    "근무일: " & Text(varSelectedAdminRequest.lsw_workdate, "yyyy-mm-dd") &
+                                    "  시간: " & Coalesce(varSelectedAdminRequest.lsw_startat, "") & " ~ " & Coalesce(varSelectedAdminRequest.lsw_endat, "") & Char(10) &
+                                    "프로젝트: " & Coalesce(varSelectedAdminRequest.lsw_projectname, "") &
+                                    "  장소: " & Coalesce(varSelectedAdminRequest.lsw_worklocation, "") & Char(10) &
+                                    "상태: " & Coalesce(varSelectedAdminRequest.lsw_approvalstatus, "") &
+                                    "  단계: " & Text(varSelectedAdminRequest.lsw_currentstage) & Char(10) &
+                                    "반려 사유: " & Coalesce(varSelectedAdminRequest.lsw_rejectionreason, "없음")
+                                )
                               Width: =Parent.Width

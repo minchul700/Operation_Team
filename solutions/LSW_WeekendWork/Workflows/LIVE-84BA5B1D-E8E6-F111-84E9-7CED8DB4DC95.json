@@ -2,7 +2,6 @@
   "properties": {
     "connectionReferences": {
       "shared_commondataserviceforapps": {
-        "impersonation": {},
         "runtimeSource": "embedded",
         "connection": {
           "connectionReferenceLogicalName": "lsw_weekendwork_dataverse"
@@ -27,6 +26,9 @@
       },
       "triggers": {
         "manual": {
+          "metadata": {
+            "operationMetadataId": "dcb722f2-b2f8-405a-83f1-582307053213"
+          },
           "type": "Request",
           "kind": "PowerAppV2",
           "inputs": {
@@ -75,12 +77,15 @@
       "actions": {
         "FindAdmins": {
           "runAfter": {},
+          "metadata": {
+            "operationMetadataId": "1047a74d-92ad-46df-8ce7-63cbdd5a2762"
+          },
           "type": "OpenApiConnection",
           "inputs": {
             "host": {
-              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
               "connectionName": "shared_commondataserviceforapps",
-              "operationId": "ListRecords"
+              "operationId": "ListRecords",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
             },
             "parameters": {
               "entityName": "lsw_tb_adminpassword_weekendworks",
@@ -105,6 +110,9 @@
               "Succeeded"
             ]
           },
+          "metadata": {
+            "operationMetadataId": "90b9222f-011a-497e-9add-eb3c9c070c90"
+          },
           "type": "Query",
           "inputs": {
             "from": "@outputs('FindAdmins')?['body/value']",
@@ -124,6 +132,9 @@
             "MatchAdmin": [
               "Succeeded"
             ]
+          },
+          "metadata": {
+            "operationMetadataId": "ee4feaae-def5-4567-b2e0-b4f9814c55d0"
           },
           "type": "Response",
           "kind": "PowerApp",
@@ -146,7 +157,7 @@
         }
       }
     },
-    "templateName": null
+    "templateName": ""
   },
   "schemaVersion": "1.0.0.0"
 }

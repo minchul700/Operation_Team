@@ -274,7 +274,7 @@ Screens:
                         PaddingLeft: =0
                         PaddingRight: =0
                         PaddingTop: =0
-                        Text: ="신청 정보를 저장할 데이터 연결이 아직 설정되지 않았습니다."
+                        Text: ="본인이 제출한 주말근무 신청과 승인 상태를 확인할 수 있습니다."
                   - S4GuidanceCard:
                       Control: GroupContainer
                       Variant: AutoLayout
@@ -311,12 +311,12 @@ Screens:
                               PaddingRight: =0
                               PaddingTop: =0
                               Size: =18
-                              Text: ="조회 안내"
+                              Text: ="내 신청 현황"
                               Wrap: =false
                         - S4GuidanceMessage:
                             Control: ModernText
                             Properties:
-                              AccessibleLabel: ="신청 내역 조회는 데이터 저장 기능 연결 후 이용할 수 있습니다."
+                              AccessibleLabel: ="본인 신청 내역 목록에서 항목을 선택하면 상세 내용과 반려 사유를 볼 수 있습니다."
                               AlignInContainer: =AlignInContainer.Stretch
                               AutoHeight: =true
                               Color: =RGBA(83, 94, 108, 1)
@@ -325,7 +325,7 @@ Screens:
                               PaddingRight: =0
                               PaddingTop: =0
                               Size: =16
-                              Text: ="신청 내역 조회는 데이터 저장 기능 연결 후 이용할 수 있습니다."
+                              Text: =If(IsBlank(LookUp(TB_WeekendWorkRequests, lsw_applicantemail = User().Email)), "아직 제출한 신청이 없습니다.", "아래 목록에서 신청을 선택하면 상세 내용과 반려 사유를 볼 수 있습니다.")
                   - S4HomeButton:
                       Control: ModernButton
                       Properties:
@@ -339,11 +339,112 @@ Screens:
                   - S4InquiryButton:
                       Control: ModernButton
                       Properties:
-                        AccessibleLabel: ="신청 내역 조회. 데이터 연결이 없어 실제 내역은 아직 표시되지 않습니다."
+                        AccessibleLabel: ="신청 내역 새로고침"
                         AlignInContainer: =AlignInContainer.Start
                         Appearance: ='ButtonAppearance'.Primary
                         Height: =48
-                        OnSelect: =Notify("조회할 신청 데이터가 연결되지 않았습니다.", NotificationType.Information)
-                        Text: ="조회"
-                        Tooltip: ="데이터 연결 후 신청 내역을 조회할 수 있습니다."
+                        OnSelect: =Refresh(TB_WeekendWorkRequests)
+                        Text: ="새로고침"
+                        Tooltip: ="최신 승인 상태를 다시 불러옵니다."
                         Width: =220
+                  - S4RequestGallery:
+                      Control: Gallery
+                      Variant: Vertical
+                      Properties:
+                        AccessibleLabel: ="본인 주말근무 신청 목록"
+                        FillPortions: =0
+                        Height: =340
+                        Items: |-
+                          =SortByColumns(
+                              Filter(TB_WeekendWorkRequests, lsw_applicantemail = User().Email),
+                              "lsw_workdate",
+                              SortOrder.Descending
+                          )
+                        LayoutMinHeight: =260
+                        LayoutMinWidth: =0
+                        TabIndex: =0
+                        TemplatePadding: =6
+                        TemplateSize: =84
+                        Width: =Parent.Width
+                      Children:
+                        - S4RequestSummary:
+                            Control: ModernText
+                            Properties:
+                              AccessibleLabel: ="신청 근무일, 종류, 승인 상태"
+                              Color: =RGBA(32, 42, 57, 1)
+                              FontWeight: =FontWeight.Semibold
+                              Height: =34
+                              OnSelect: =Select(Parent)
+                              Size: =16
+                              Text: =Text(ThisItem.lsw_workdate, "yyyy-mm-dd") & " · " & If(ThisItem.lsw_requesttype = "Planned", "예정", "완료") & " · " & Coalesce(ThisItem.lsw_approvalstatus, "접수")
+                              Width: =Parent.TemplateWidth - 16
+                              X: =8
+                              Y: =6
+                        - S4RequestProject:
+                            Control: ModernText
+                            Properties:
+                              AccessibleLabel: ="신청 프로젝트 및 근무 시각"
+                              Color: =RGBA(83, 94, 108, 1)
+                              Height: =30
+                              OnSelect: =Select(Parent)
+                              Size: =14
+                              Text: =Coalesce(ThisItem.lsw_projectname, "프로젝트 미입력") & " · " & Coalesce(ThisItem.lsw_startat, "") & "~" & Coalesce(ThisItem.lsw_endat, "")
+                              Width: =Parent.TemplateWidth - 16
+                              X: =8
+                              Y: =42
+                  - S4SelectedDetailCard:
+                      Control: GroupContainer
+                      Variant: AutoLayout
+                      Properties:
+                        BorderColor: =RGBA(224, 228, 233, 1)
+                        BorderThickness: =1
+                        Fill: =RGBA(255, 255, 255, 1)
+                        FillPortions: =0
+                        Height: =300
+                        LayoutAlignItems: =LayoutAlignItems.Stretch
+                        LayoutDirection: =LayoutDirection.Vertical
+                        LayoutGap: =8
+                        LayoutMinHeight: =0
+                        LayoutMinWidth: =0
+                        LayoutOverflowY: =LayoutOverflow.Scroll
+                        PaddingBottom: =20
+                        PaddingLeft: =20
+                        PaddingRight: =20
+                        PaddingTop: =20
+                        RadiusBottomLeft: =8
+                        RadiusBottomRight: =8
+                        RadiusTopLeft: =8
+                        RadiusTopRight: =8
+                      Children:
+                        - S4SelectedDetailTitle:
+                            Control: ModernText
+                            Properties:
+                              AccessibleLabel: ="선택한 신청 상세"
+                              AutoHeight: =true
+                              Color: =RGBA(32, 42, 57, 1)
+                              FontWeight: =FontWeight.Semibold
+                              Size: =18
+                              Text: ="신청 상세"
+                        - S4SelectedDetailText:
+                            Control: ModernText
+                            Properties:
+                              AccessibleLabel: ="선택한 신청의 근무일, 장소, 사유, 상세 내용, 승인 상태 및 반려 사유"
+                              AutoHeight: =true
+                              Color: =RGBA(50, 60, 75, 1)
+                              Text: |-
+                                =With(
+                                    {request: S4RequestGallery.Selected},
+                                    If(
+                                        IsBlank(request.lsw_tb_weekendworkrequestid),
+                                        "목록에서 신청을 선택하세요.",
+                                        "근무일: " & Text(request.lsw_workdate, "yyyy-mm-dd") & Char(10) &
+                                        "승인 상태: " & Coalesce(request.lsw_approvalstatus, "접수") & Char(10) &
+                                        "진행 단계: " & Text(request.lsw_currentstage) & "차" & Char(10) &
+                                        "프로젝트: " & Coalesce(request.lsw_projectname, "") & Char(10) &
+                                        "근무 장소: " & Coalesce(request.lsw_worklocation, "") & Char(10) &
+                                        "근무 시각: " & Coalesce(request.lsw_startat, "") & "~" & Coalesce(request.lsw_endat, "") & Char(10) &
+                                        "신청 사유: " & Coalesce(request.lsw_reason, "") & Char(10) &
+                                        "상세 내용: " & Coalesce(request.lsw_details, "") &
+                                        If(IsBlank(request.lsw_rejectionreason), "", Char(10) & "반려 사유: " & request.lsw_rejectionreason)
+                                    )
+                                )

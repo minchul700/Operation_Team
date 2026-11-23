@@ -1,0 +1,1140 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_commondataserviceforapps": {
+        "impersonation": {},
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "lsw_weekendwork_dataverse"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      },
+      "shared_sharepointonline": {
+        "impersonation": {},
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "lsw_weekendwork_sharepoint"
+        },
+        "api": {
+          "name": "shared_sharepointonline"
+        }
+      },
+      "shared_approvals": {
+        "impersonation": {},
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "lsw_weekendwork_approvals"
+        },
+        "api": {
+          "name": "shared_approvals"
+        }
+      },
+      "shared_office365": {
+        "impersonation": {},
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "lsw_weekendwork_outlook"
+        },
+        "api": {
+          "name": "shared_office365"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "triggers": {
+        "RowAdded": {
+          "type": "OpenApiConnectionWebhook",
+          "inputs": {
+            "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "SubscribeWebhookTrigger"
+            },
+            "parameters": {
+              "subscriptionRequest/message": 4,
+              "subscriptionRequest/entityname": "lsw_tb_weekendworkrequest",
+              "subscriptionRequest/scope": 4
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        }
+      },
+      "actions": {
+        "GetCreator": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "GetItem"
+            },
+            "parameters": {
+              "entityName": "systemusers",
+              "recordId": "@triggerBody()?['_createdby_value']"
+            },
+            "authentication": "@parameters('$authentication')"
+          },
+          "runAfter": {}
+        },
+        "FindEmployee": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "ListRecords"
+            },
+            "parameters": {
+              "entityName": "lsw_tb_employee_weekendworks",
+              "$filter": "@concat('lsw_emp_email eq ''',replace(coalesce(outputs('GetCreator')?['body/internalemailaddress'],''),'''',''''''),'''')",
+              "$select": "lsw_tb_employee_weekendworkid,lsw_emp_email,lsw_emp_id,lsw_emp_name",
+              "$top": 2
+            },
+            "authentication": "@parameters('$authentication')"
+          },
+          "runAfter": {
+            "GetCreator": [
+              "Succeeded"
+            ]
+          }
+        },
+        "IfUniqueEmployee": {
+          "type": "If",
+          "expression": {
+            "equals": [
+              "@and(not(empty(outputs('GetCreator')?['body/internalemailaddress'])),equals(length(outputs('FindEmployee')?['body/value']),1),equals(toLower(coalesce(first(outputs('FindEmployee')?['body/value'])?['lsw_emp_email'],'')),toLower(coalesce(outputs('GetCreator')?['body/internalemailaddress'],''))))",
+              true
+            ]
+          },
+          "actions": {
+            "GetEmployee": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+                  "connectionName": "shared_commondataserviceforapps",
+                  "operationId": "GetItem"
+                },
+                "parameters": {
+                  "entityName": "lsw_tb_employee_weekendworks",
+                  "recordId": "@first(outputs('FindEmployee')?['body/value'])?['lsw_tb_employee_weekendworkid']"
+                },
+                "authentication": "@parameters('$authentication')"
+              },
+              "runAfter": {}
+            },
+            "SetApplicantSnapshot": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+                  "connectionName": "shared_commondataserviceforapps",
+                  "operationId": "UpdateRecord"
+                },
+                "parameters": {
+                  "entityName": "lsw_tb_weekendworkrequests",
+                  "recordId": "@triggerBody()?['lsw_tb_weekendworkrequestid']",
+                  "item/lsw_Employee@odata.bind": "@concat('lsw_tb_employee_weekendworks(',outputs('GetEmployee')?['body/lsw_tb_employee_weekendworkid'],')')",
+                  "item/lsw_employeeid": "@outputs('GetEmployee')?['body/lsw_emp_id']",
+                  "item/lsw_applicantname": "@outputs('GetEmployee')?['body/lsw_emp_name']",
+                  "item/lsw_applicantemail": "@outputs('GetCreator')?['body/internalemailaddress']",
+                  "item/lsw_approvalstatus": "Pending",
+                  "item/lsw_currentstage": 1,
+                  "item/lsw_department": "",
+                  "item/lsw_stage1approveremail": "",
+                  "item/lsw_stage2approveremail": "",
+                  "item/lsw_stage3approveremail": "",
+                  "item/lsw_stage1result": "",
+                  "item/lsw_stage2result": "",
+                  "item/lsw_stage3result": "",
+                  "item/lsw_processedby": "",
+                  "item/lsw_rejectionreason": "",
+                  "item/lsw_flowerror": ""
+                },
+                "authentication": "@parameters('$authentication')"
+              },
+              "runAfter": {
+                "GetEmployee": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "EmailReceived": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365",
+                  "connectionName": "shared_office365",
+                  "operationId": "SendEmailV2"
+                },
+                "parameters": {
+                  "emailMessage/To": "@outputs('GetEmployee')?['body/lsw_emp_email']",
+                  "emailMessage/Subject": "[Weekend Work] Request received",
+                  "emailMessage/Body": "<p>Your weekend work request was received. We will send the approval result.</p>"
+                },
+                "authentication": "@parameters('$authentication')"
+              },
+              "runAfter": {
+                "SetApplicantSnapshot": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "IfSkipStage1": {
+              "type": "If",
+              "expression": {
+                "equals": [
+                  "@or(equals(toLower(outputs('GetEmployee')?['body/lsw_emp_email']),'bs.seo@dexconsulting.net'),equals(toLower(outputs('GetEmployee')?['body/lsw_emp_email']),'ms.park@dexconsulting.net'))",
+                  true
+                ]
+              },
+              "actions": {
+                "SetStage2Special": {
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "host": {
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+                      "connectionName": "shared_commondataserviceforapps",
+                      "operationId": "UpdateRecord"
+                    },
+                    "parameters": {
+                      "entityName": "lsw_tb_weekendworkrequests",
+                      "recordId": "@triggerBody()?['lsw_tb_weekendworkrequestid']",
+                      "item/lsw_stage1result": "Skipped",
+                      "item/lsw_currentstage": 2,
+                      "item/lsw_stage2approveremail": "bs.seo@dexconsulting.net",
+                      "item/lsw_approvalstatus": "Pending"
+                    },
+                    "authentication": "@parameters('$authentication')"
+                  },
+                  "runAfter": {}
+                },
+                "Approval2Special": {
+                  "type": "OpenApiConnectionWebhook",
+                  "inputs": {
+                    "host": {
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_approvals",
+                      "connectionName": "shared_approvals",
+                      "operationId": "StartAndWaitForAnApproval"
+                    },
+                    "parameters": {
+                      "approvalType": "CustomResponseAwaitAll",
+                      "WebhookApprovalCreationInput/responseOptions": [
+                        "승인",
+                        "거부"
+                      ],
+                      "WebhookApprovalCreationInput/title": "[주말근무 2차 승인] @{triggerBody()?['lsw_requestname']}",
+                      "WebhookApprovalCreationInput/assignedTo": "bs.seo@dexconsulting.net",
+                      "WebhookApprovalCreationInput/details": "신청자: @{outputs('GetEmployee')?['body/lsw_emp_name']}\n근무일: @{triggerBody()?['lsw_workdate']}\n프로젝트: @{triggerBody()?['lsw_projectname']}\n신청 사유: @{triggerBody()?['lsw_reason']}",
+                      "WebhookApprovalCreationInput/requestor": "@outputs('GetEmployee')?['body/lsw_emp_email']",
+                      "WebhookApprovalCreationInput/enableNotifications": true,
+                      "WebhookApprovalCreationInput/enableReassignment": true
+                    },
+                    "authentication": "@parameters('$authentication')"
+                  },
+                  "runAfter": {
+                    "SetStage2Special": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "IfStage2ApprovedSpecial": {
+                  "type": "If",
+                  "expression": {
+                    "equals": [
+                      "@outputs('Approval2Special')?['body/outcome']",
+                      "승인"
+                    ]
+                  },
+                  "actions": {
+                    "SetStage3Special": {
+                      "type": "OpenApiConnection",
+                      "inputs": {
+                        "host": {
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+                          "connectionName": "shared_commondataserviceforapps",
+                          "operationId": "UpdateRecord"
+                        },
+                        "parameters": {
+                          "entityName": "lsw_tb_weekendworkrequests",
+                          "recordId": "@triggerBody()?['lsw_tb_weekendworkrequestid']",
+                          "item/lsw_stage2result": "Approved",
+                          "item/lsw_currentstage": 3,
+                          "item/lsw_stage3approveremail": "ms.park@dexconsulting.net"
+                        },
+                        "authentication": "@parameters('$authentication')"
+                      },
+                      "runAfter": {}
+                    },
+                    "Approval3Special": {
+                      "type": "OpenApiConnectionWebhook",
+                      "inputs": {
+                        "host": {
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_approvals",
+                          "connectionName": "shared_approvals",
+                          "operationId": "StartAndWaitForAnApproval"
+                        },
+                        "parameters": {
+                          "approvalType": "CustomResponseAwaitAll",
+                          "WebhookApprovalCreationInput/responseOptions": [
+                            "승인",
+                            "거부"
+                          ],
+                          "WebhookApprovalCreationInput/title": "[주말근무 3차 승인] @{triggerBody()?['lsw_requestname']}",
+                          "WebhookApprovalCreationInput/assignedTo": "ms.park@dexconsulting.net",
+                          "WebhookApprovalCreationInput/details": "신청자: @{outputs('GetEmployee')?['body/lsw_emp_name']}\n근무일: @{triggerBody()?['lsw_workdate']}\n프로젝트: @{triggerBody()?['lsw_projectname']}\n신청 사유: @{triggerBody()?['lsw_reason']}",
+                          "WebhookApprovalCreationInput/requestor": "@outputs('GetEmployee')?['body/lsw_emp_email']",
+                          "WebhookApprovalCreationInput/enableNotifications": true,
+                          "WebhookApprovalCreationInput/enableReassignment": true
+                        },
+                        "authentication": "@parameters('$authentication')"
+                      },
+                      "runAfter": {
+                        "SetStage3Special": [
+                          "Succeeded"
+                        ]
+                      }
+                    },
+                    "IfStage3ApprovedSpecial": {
+                      "type": "If",
+                      "expression": {
+                        "equals": [
+                          "@outputs('Approval3Special')?['body/outcome']",
+                          "승인"
+                        ]
+                      },
+                      "actions": {
+                        "ApproveRequestSpecial": {
+                          "type": "OpenApiConnection",
+                          "inputs": {
+                            "host": {
+                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+                              "connectionName": "shared_commondataserviceforapps",
+                              "operationId": "UpdateRecord"
+                            },
+                            "parameters": {
+                              "entityName": "lsw_tb_weekendworkrequests",
+                              "recordId": "@triggerBody()?['lsw_tb_weekendworkrequestid']",
+                              "item/lsw_approvalstatus": "Approved",
+                              "item/lsw_currentstage": 3,
+                              "item/lsw_stage3result": "Approved",
+                              "item/lsw_processedby": "ms.park@dexconsulting.net"
+                            },
+                            "authentication": "@parameters('$authentication')"
+                          },
+                          "runAfter": {}
+                        },
+                        "EmailApprovedSpecial": {
+                          "type": "OpenApiConnection",
+                          "inputs": {
+                            "host": {
+                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365",
+                              "connectionName": "shared_office365",
+                              "operationId": "SendEmailV2"
+                            },
+                            "parameters": {
+                              "emailMessage/To": "@outputs('GetEmployee')?['body/lsw_emp_email']",
+                              "emailMessage/Subject": "[주말근무 신청] 최종 승인",
+                              "emailMessage/Body": "<p>주말근무 신청이 최종 승인되었습니다.</p>"
+                            },
+                            "authentication": "@parameters('$authentication')"
+                          },
+                          "runAfter": {
+                            "ApproveRequestSpecial": [
+                              "Succeeded"
+                            ]
+                          }
+                        }
+                      },
+                      "else": {
+                        "actions": {
+                          "RejectStage3Special": {
+                            "type": "OpenApiConnection",
+                            "inputs": {
+                              "host": {
+                                "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+                                "connectionName": "shared_commondataserviceforapps",
+                                "operationId": "UpdateRecord"
+                              },
+                              "parameters": {
+                                "entityName": "lsw_tb_weekendworkrequests",
+                                "recordId": "@triggerBody()?['lsw_tb_weekendworkrequestid']",
+                                "item/lsw_approvalstatus": "Rejected",
+                                "item/lsw_currentstage": 3,
+                                "item/lsw_stage3result": "Rejected",
+                                "item/lsw_processedby": "ms.park@dexconsulting.net",
+                                "item/lsw_rejectionreason": "@coalesce(first(outputs('Approval3Special')?['body/responses'])?['comments'],'')"
+                              },
+                              "authentication": "@parameters('$authentication')"
+                            },
+                            "runAfter": {}
+                          },
+                          "EmailRejectedStage3Special": {
+                            "type": "OpenApiConnection",
+                            "inputs": {
+                              "host": {
+                                "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365",
+                                "connectionName": "shared_office365",
+                                "operationId": "SendEmailV2"
+                              },
+                              "parameters": {
+                                "emailMessage/To": "@outputs('GetEmployee')?['body/lsw_emp_email']",
+                                "emailMessage/Subject": "[주말근무 신청] 3차 반려",
+                                "emailMessage/Body": "<p>3차 승인에서 반려되었습니다.</p><p>사유: @{coalesce(first(outputs('Approval3Special')?['body/responses'])?['comments'],'')}</p>"
+                              },
+                              "authentication": "@parameters('$authentication')"
+                            },
+                            "runAfter": {
+                              "RejectStage3Special": [
+                                "Succeeded"
+                              ]
+                            }
+                          }
+                        }
+                      },
+                      "runAfter": {
+                        "Approval3Special": [
+                          "Succeeded"
+                        ]
+                      }
+                    }
+                  },
+                  "else": {
+                    "actions": {
+                      "RejectStage2Special": {
+                        "type": "OpenApiConnection",
+                        "inputs": {
+                          "host": {
+                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+                            "connectionName": "shared_commondataserviceforapps",
+                            "operationId": "UpdateRecord"
+                          },
+                          "parameters": {
+                            "entityName": "lsw_tb_weekendworkrequests",
+                            "recordId": "@triggerBody()?['lsw_tb_weekendworkrequestid']",
+                            "item/lsw_approvalstatus": "Rejected",
+                            "item/lsw_currentstage": 2,
+                            "item/lsw_stage2result": "Rejected",
+                            "item/lsw_processedby": "bs.seo@dexconsulting.net",
+                            "item/lsw_rejectionreason": "@coalesce(first(outputs('Approval2Special')?['body/responses'])?['comments'],'')"
+                          },
+                          "authentication": "@parameters('$authentication')"
+                        },
+                        "runAfter": {}
+                      },
+                      "EmailRejectedStage2Special": {
+                        "type": "OpenApiConnection",
+                        "inputs": {
+                          "host": {
+                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365",
+                            "connectionName": "shared_office365",
+                            "operationId": "SendEmailV2"
+                          },
+                          "parameters": {
+                            "emailMessage/To": "@outputs('GetEmployee')?['body/lsw_emp_email']",
+                            "emailMessage/Subject": "[주말근무 신청] 2차 반려",
+                            "emailMessage/Body": "<p>2차 승인에서 반려되었습니다.</p><p>사유: @{coalesce(first(outputs('Approval2Special')?['body/responses'])?['comments'],'')}</p>"
+                          },
+                          "authentication": "@parameters('$authentication')"
+                        },
+                        "runAfter": {
+                          "RejectStage2Special": [
+                            "Succeeded"
+                          ]
+                        }
+                      }
+                    }
+                  },
+                  "runAfter": {
+                    "Approval2Special": [
+                      "Succeeded"
+                    ]
+                  }
+                }
+              },
+              "else": {
+                "actions": {
+                  "GetApplicantRows": {
+                    "type": "OpenApiConnection",
+                    "inputs": {
+                      "host": {
+                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                        "connectionName": "shared_sharepointonline",
+                        "operationId": "GetItems"
+                      },
+                      "parameters": {
+                        "dataset": "https://dexconsultingnet.sharepoint.com/sites/Orgnization_Char",
+                        "table": "Orgnization_Chart_Department_User_List",
+                        "$filter": "@concat('UserEmail eq ''',replace(outputs('GetEmployee')?['body/lsw_emp_email'],'''',''''''),'''')",
+                        "$top": 100
+                      },
+                      "authentication": "@parameters('$authentication')"
+                    },
+                    "runAfter": {}
+                  },
+                  "FilterApplicantTeamRows": {
+                    "type": "Query",
+                    "inputs": {
+                      "from": "@outputs('GetApplicantRows')?['body/value']",
+                      "where": "@and(equals(toLower(coalesce(item()?['UserEmail'],'')),toLower(outputs('GetEmployee')?['body/lsw_emp_email'])),or(endsWith(trim(coalesce(item()?['Title'],'')),' 팀원'),endsWith(trim(coalesce(item()?['Title'],'')),' Leader')))"
+                    },
+                    "runAfter": {
+                      "GetApplicantRows": [
+                        "Succeeded"
+                      ]
+                    }
+                  },
+                  "SelectApplicantTeams": {
+                    "type": "Select",
+                    "inputs": {
+                      "from": "@body('FilterApplicantTeamRows')",
+                      "select": {
+                        "team": "@trim(replace(replace(item()?['Title'],' 팀원',''),' Leader',''))"
+                      }
+                    },
+                    "runAfter": {
+                      "FilterApplicantTeamRows": [
+                        "Succeeded"
+                      ]
+                    }
+                  },
+                  "UniqueApplicantTeams": {
+                    "type": "Compose",
+                    "inputs": "@union(body('SelectApplicantTeams'),body('SelectApplicantTeams'))",
+                    "runAfter": {
+                      "SelectApplicantTeams": [
+                        "Succeeded"
+                      ]
+                    }
+                  },
+                  "IfUniqueTeamRow": {
+                    "type": "If",
+                    "expression": {
+                      "equals": [
+                        "@length(outputs('UniqueApplicantTeams'))",
+                        1
+                      ]
+                    },
+                    "actions": {
+                      "TeamName": {
+                        "type": "Compose",
+                        "inputs": "@first(outputs('UniqueApplicantTeams'))?['team']",
+                        "runAfter": {}
+                      },
+                      "GetLeaderRows": {
+                        "type": "OpenApiConnection",
+                        "inputs": {
+                          "host": {
+                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                            "connectionName": "shared_sharepointonline",
+                            "operationId": "GetItems"
+                          },
+                          "parameters": {
+                            "dataset": "https://dexconsultingnet.sharepoint.com/sites/Orgnization_Char",
+                            "table": "Orgnization_Chart_Department_User_List",
+                            "$filter": "@concat('Title eq ''',replace(concat(outputs('TeamName'),' Leader'),'''',''''''),'''')",
+                            "$top": 100
+                          },
+                          "authentication": "@parameters('$authentication')"
+                        },
+                        "runAfter": {
+                          "TeamName": [
+                            "Succeeded"
+                          ]
+                        }
+                      },
+                      "FilterLeaders": {
+                        "type": "Query",
+                        "inputs": {
+                          "from": "@outputs('GetLeaderRows')?['body/value']",
+                          "where": "@and(equals(trim(coalesce(item()?['Title'],'')),concat(outputs('TeamName'),' Leader')),not(empty(item()?['UserEmail'])))"
+                        },
+                        "runAfter": {
+                          "GetLeaderRows": [
+                            "Succeeded"
+                          ]
+                        }
+                      },
+                      "SelectLeaderEmails": {
+                        "type": "Select",
+                        "inputs": {
+                          "from": "@body('FilterLeaders')",
+                          "select": {
+                            "email": "@toLower(trim(item()?['UserEmail']))"
+                          }
+                        },
+                        "runAfter": {
+                          "FilterLeaders": [
+                            "Succeeded"
+                          ]
+                        }
+                      },
+                      "UniqueLeaderEmails": {
+                        "type": "Compose",
+                        "inputs": "@union(body('SelectLeaderEmails'),body('SelectLeaderEmails'))",
+                        "runAfter": {
+                          "SelectLeaderEmails": [
+                            "Succeeded"
+                          ]
+                        }
+                      },
+                      "IfUniqueLeader": {
+                        "type": "If",
+                        "expression": {
+                          "equals": [
+                            "@length(outputs('UniqueLeaderEmails'))",
+                            1
+                          ]
+                        },
+                        "actions": {
+                          "LeaderEmail": {
+                            "type": "Compose",
+                            "inputs": "@first(outputs('UniqueLeaderEmails'))?['email']",
+                            "runAfter": {}
+                          },
+                          "SetStage1": {
+                            "type": "OpenApiConnection",
+                            "inputs": {
+                              "host": {
+                                "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+                                "connectionName": "shared_commondataserviceforapps",
+                                "operationId": "UpdateRecord"
+                              },
+                              "parameters": {
+                                "entityName": "lsw_tb_weekendworkrequests",
+                                "recordId": "@triggerBody()?['lsw_tb_weekendworkrequestid']",
+                                "item/lsw_approvalstatus": "Pending",
+                                "item/lsw_currentstage": 1,
+                                "item/lsw_stage1approveremail": "@outputs('LeaderEmail')",
+                                "item/lsw_department": "@outputs('TeamName')"
+                              },
+                              "authentication": "@parameters('$authentication')"
+                            },
+                            "runAfter": {
+                              "LeaderEmail": [
+                                "Succeeded"
+                              ]
+                            }
+                          },
+                          "Approval1": {
+                            "type": "OpenApiConnectionWebhook",
+                            "inputs": {
+                              "host": {
+                                "apiId": "/providers/Microsoft.PowerApps/apis/shared_approvals",
+                                "connectionName": "shared_approvals",
+                                "operationId": "StartAndWaitForAnApproval"
+                              },
+                              "parameters": {
+                                "approvalType": "CustomResponseAwaitAll",
+                                "WebhookApprovalCreationInput/responseOptions": [
+                                  "승인",
+                                  "거부"
+                                ],
+                                "WebhookApprovalCreationInput/title": "[주말근무 1차 승인] @{triggerBody()?['lsw_requestname']}",
+                                "WebhookApprovalCreationInput/assignedTo": "@outputs('LeaderEmail')",
+                                "WebhookApprovalCreationInput/details": "신청자: @{outputs('GetEmployee')?['body/lsw_emp_name']}\n근무일: @{triggerBody()?['lsw_workdate']}\n프로젝트: @{triggerBody()?['lsw_projectname']}\n신청 사유: @{triggerBody()?['lsw_reason']}",
+                                "WebhookApprovalCreationInput/requestor": "@outputs('GetEmployee')?['body/lsw_emp_email']",
+                                "WebhookApprovalCreationInput/enableNotifications": true,
+                                "WebhookApprovalCreationInput/enableReassignment": true
+                              },
+                              "authentication": "@parameters('$authentication')"
+                            },
+                            "runAfter": {
+                              "SetStage1": [
+                                "Succeeded"
+                              ]
+                            }
+                          },
+                          "IfStage1Approved": {
+                            "type": "If",
+                            "expression": {
+                              "equals": [
+                                "@outputs('Approval1')?['body/outcome']",
+                                "승인"
+                              ]
+                            },
+                            "actions": {
+                              "SetStage2": {
+                                "type": "OpenApiConnection",
+                                "inputs": {
+                                  "host": {
+                                    "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+                                    "connectionName": "shared_commondataserviceforapps",
+                                    "operationId": "UpdateRecord"
+                                  },
+                                  "parameters": {
+                                    "entityName": "lsw_tb_weekendworkrequests",
+                                    "recordId": "@triggerBody()?['lsw_tb_weekendworkrequestid']",
+                                    "item/lsw_stage1result": "Approved",
+                                    "item/lsw_currentstage": 2,
+                                    "item/lsw_stage2approveremail": "bs.seo@dexconsulting.net"
+                                  },
+                                  "authentication": "@parameters('$authentication')"
+                                },
+                                "runAfter": {}
+                              },
+                              "Approval2": {
+                                "type": "OpenApiConnectionWebhook",
+                                "inputs": {
+                                  "host": {
+                                    "apiId": "/providers/Microsoft.PowerApps/apis/shared_approvals",
+                                    "connectionName": "shared_approvals",
+                                    "operationId": "StartAndWaitForAnApproval"
+                                  },
+                                  "parameters": {
+                                    "approvalType": "CustomResponseAwaitAll",
+                                    "WebhookApprovalCreationInput/responseOptions": [
+                                      "승인",
+                                      "거부"
+                                    ],
+                                    "WebhookApprovalCreationInput/title": "[주말근무 2차 승인] @{triggerBody()?['lsw_requestname']}",
+                                    "WebhookApprovalCreationInput/assignedTo": "bs.seo@dexconsulting.net",
+                                    "WebhookApprovalCreationInput/details": "신청자: @{outputs('GetEmployee')?['body/lsw_emp_name']}\n근무일: @{triggerBody()?['lsw_workdate']}\n프로젝트: @{triggerBody()?['lsw_projectname']}\n신청 사유: @{triggerBody()?['lsw_reason']}",
+                                    "WebhookApprovalCreationInput/requestor": "@outputs('GetEmployee')?['body/lsw_emp_email']",
+                                    "WebhookApprovalCreationInput/enableNotifications": true,
+                                    "WebhookApprovalCreationInput/enableReassignment": true
+                                  },
+                                  "authentication": "@parameters('$authentication')"
+                                },
+                                "runAfter": {
+                                  "SetStage2": [
+                                    "Succeeded"
+                                  ]
+                                }
+                              },
+                              "IfStage2Approved": {
+                                "type": "If",
+                                "expression": {
+                                  "equals": [
+                                    "@outputs('Approval2')?['body/outcome']",
+                                    "승인"
+                                  ]
+                                },
+                                "actions": {
+                                  "SetStage3": {
+                                    "type": "OpenApiConnection",
+                                    "inputs": {
+                                      "host": {
+                                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+                                        "connectionName": "shared_commondataserviceforapps",
+                                        "operationId": "UpdateRecord"
+                                      },
+                                      "parameters": {
+                                        "entityName": "lsw_tb_weekendworkrequests",
+                                        "recordId": "@triggerBody()?['lsw_tb_weekendworkrequestid']",
+                                        "item/lsw_stage2result": "Approved",
+                                        "item/lsw_currentstage": 3,
+                                        "item/lsw_stage3approveremail": "ms.park@dexconsulting.net"
+                                      },
+                                      "authentication": "@parameters('$authentication')"
+                                    },
+                                    "runAfter": {}
+                                  },
+                                  "Approval3": {
+                                    "type": "OpenApiConnectionWebhook",
+                                    "inputs": {
+                                      "host": {
+                                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_approvals",
+                                        "connectionName": "shared_approvals",
+                                        "operationId": "StartAndWaitForAnApproval"
+                                      },
+                                      "parameters": {
+                                        "approvalType": "CustomResponseAwaitAll",
+                                        "WebhookApprovalCreationInput/responseOptions": [
+                                          "승인",
+                                          "거부"
+                                        ],
+                                        "WebhookApprovalCreationInput/title": "[주말근무 3차 승인] @{triggerBody()?['lsw_requestname']}",
+                                        "WebhookApprovalCreationInput/assignedTo": "ms.park@dexconsulting.net",
+                                        "WebhookApprovalCreationInput/details": "신청자: @{outputs('GetEmployee')?['body/lsw_emp_name']}\n근무일: @{triggerBody()?['lsw_workdate']}\n프로젝트: @{triggerBody()?['lsw_projectname']}\n신청 사유: @{triggerBody()?['lsw_reason']}",
+                                        "WebhookApprovalCreationInput/requestor": "@outputs('GetEmployee')?['body/lsw_emp_email']",
+                                        "WebhookApprovalCreationInput/enableNotifications": true,
+                                        "WebhookApprovalCreationInput/enableReassignment": true
+                                      },
+                                      "authentication": "@parameters('$authentication')"
+                                    },
+                                    "runAfter": {
+                                      "SetStage3": [
+                                        "Succeeded"
+                                      ]
+                                    }
+                                  },
+                                  "IfStage3Approved": {
+                                    "type": "If",
+                                    "expression": {
+                                      "equals": [
+                                        "@outputs('Approval3')?['body/outcome']",
+                                        "승인"
+                                      ]
+                                    },
+                                    "actions": {
+                                      "ApproveRequest": {
+                                        "type": "OpenApiConnection",
+                                        "inputs": {
+                                          "host": {
+                                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+                                            "connectionName": "shared_commondataserviceforapps",
+                                            "operationId": "UpdateRecord"
+                                          },
+                                          "parameters": {
+                                            "entityName": "lsw_tb_weekendworkrequests",
+                                            "recordId": "@triggerBody()?['lsw_tb_weekendworkrequestid']",
+                                            "item/lsw_approvalstatus": "Approved",
+                                            "item/lsw_currentstage": 3,
+                                            "item/lsw_stage3result": "Approved",
+                                            "item/lsw_processedby": "ms.park@dexconsulting.net"
+                                          },
+                                          "authentication": "@parameters('$authentication')"
+                                        },
+                                        "runAfter": {}
+                                      },
+                                      "EmailApproved": {
+                                        "type": "OpenApiConnection",
+                                        "inputs": {
+                                          "host": {
+                                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365",
+                                            "connectionName": "shared_office365",
+                                            "operationId": "SendEmailV2"
+                                          },
+                                          "parameters": {
+                                            "emailMessage/To": "@outputs('GetEmployee')?['body/lsw_emp_email']",
+                                            "emailMessage/Subject": "[주말근무 신청] 최종 승인",
+                                            "emailMessage/Body": "<p>주말근무 신청이 최종 승인되었습니다.</p>"
+                                          },
+                                          "authentication": "@parameters('$authentication')"
+                                        },
+                                        "runAfter": {
+                                          "ApproveRequest": [
+                                            "Succeeded"
+                                          ]
+                                        }
+                                      }
+                                    },
+                                    "else": {
+                                      "actions": {
+                                        "RejectStage3": {
+                                          "type": "OpenApiConnection",
+                                          "inputs": {
+                                            "host": {
+                                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+                                              "connectionName": "shared_commondataserviceforapps",
+                                              "operationId": "UpdateRecord"
+                                            },
+                                            "parameters": {
+                                              "entityName": "lsw_tb_weekendworkrequests",
+                                              "recordId": "@triggerBody()?['lsw_tb_weekendworkrequestid']",
+                                              "item/lsw_approvalstatus": "Rejected",
+                                              "item/lsw_currentstage": 3,
+                                              "item/lsw_stage3result": "Rejected",
+                                              "item/lsw_processedby": "ms.park@dexconsulting.net",
+                                              "item/lsw_rejectionreason": "@coalesce(first(outputs('Approval3')?['body/responses'])?['comments'],'')"
+                                            },
+                                            "authentication": "@parameters('$authentication')"
+                                          },
+                                          "runAfter": {}
+                                        },
+                                        "EmailRejectedStage3": {
+                                          "type": "OpenApiConnection",
+                                          "inputs": {
+                                            "host": {
+                                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365",
+                                              "connectionName": "shared_office365",
+                                              "operationId": "SendEmailV2"
+                                            },
+                                            "parameters": {
+                                              "emailMessage/To": "@outputs('GetEmployee')?['body/lsw_emp_email']",
+                                              "emailMessage/Subject": "[주말근무 신청] 3차 반려",
+                                              "emailMessage/Body": "<p>3차 승인에서 반려되었습니다.</p><p>사유: @{coalesce(first(outputs('Approval3')?['body/responses'])?['comments'],'')}</p>"
+                                            },
+                                            "authentication": "@parameters('$authentication')"
+                                          },
+                                          "runAfter": {
+                                            "RejectStage3": [
+                                              "Succeeded"
+                                            ]
+                                          }
+                                        }
+                                      }
+                                    },
+                                    "runAfter": {
+                                      "Approval3": [
+                                        "Succeeded"
+                                      ]
+                                    }
+                                  }
+                                },
+                                "else": {
+                                  "actions": {
+                                    "RejectStage2": {
+                                      "type": "OpenApiConnection",
+                                      "inputs": {
+                                        "host": {
+                                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+                                          "connectionName": "shared_commondataserviceforapps",
+                                          "operationId": "UpdateRecord"
+                                        },
+                                        "parameters": {
+                                          "entityName": "lsw_tb_weekendworkrequests",
+                                          "recordId": "@triggerBody()?['lsw_tb_weekendworkrequestid']",
+                                          "item/lsw_approvalstatus": "Rejected",
+                                          "item/lsw_currentstage": 2,
+                                          "item/lsw_stage2result": "Rejected",
+                                          "item/lsw_processedby": "bs.seo@dexconsulting.net",
+                                          "item/lsw_rejectionreason": "@coalesce(first(outputs('Approval2')?['body/responses'])?['comments'],'')"
+                                        },
+                                        "authentication": "@parameters('$authentication')"
+                                      },
+                                      "runAfter": {}
+                                    },
+                                    "EmailRejectedStage2": {
+                                      "type": "OpenApiConnection",
+                                      "inputs": {
+                                        "host": {
+                                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365",
+                                          "connectionName": "shared_office365",
+                                          "operationId": "SendEmailV2"
+                                        },
+                                        "parameters": {
+                                          "emailMessage/To": "@outputs('GetEmployee')?['body/lsw_emp_email']",
+                                          "emailMessage/Subject": "[주말근무 신청] 2차 반려",
+                                          "emailMessage/Body": "<p>2차 승인에서 반려되었습니다.</p><p>사유: @{coalesce(first(outputs('Approval2')?['body/responses'])?['comments'],'')}</p>"
+                                        },
+                                        "authentication": "@parameters('$authentication')"
+                                      },
+                                      "runAfter": {
+                                        "RejectStage2": [
+                                          "Succeeded"
+                                        ]
+                                      }
+                                    }
+                                  }
+                                },
+                                "runAfter": {
+                                  "Approval2": [
+                                    "Succeeded"
+                                  ]
+                                }
+                              }
+                            },
+                            "else": {
+                              "actions": {
+                                "RejectStage1": {
+                                  "type": "OpenApiConnection",
+                                  "inputs": {
+                                    "host": {
+                                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+                                      "connectionName": "shared_commondataserviceforapps",
+                                      "operationId": "UpdateRecord"
+                                    },
+                                    "parameters": {
+                                      "entityName": "lsw_tb_weekendworkrequests",
+                                      "recordId": "@triggerBody()?['lsw_tb_weekendworkrequestid']",
+                                      "item/lsw_approvalstatus": "Rejected",
+                                      "item/lsw_currentstage": 1,
+                                      "item/lsw_stage1result": "Rejected",
+                                      "item/lsw_processedby": "@outputs('LeaderEmail')",
+                                      "item/lsw_rejectionreason": "@coalesce(first(outputs('Approval1')?['body/responses'])?['comments'],'')"
+                                    },
+                                    "authentication": "@parameters('$authentication')"
+                                  },
+                                  "runAfter": {}
+                                },
+                                "EmailRejectedStage1": {
+                                  "type": "OpenApiConnection",
+                                  "inputs": {
+                                    "host": {
+                                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365",
+                                      "connectionName": "shared_office365",
+                                      "operationId": "SendEmailV2"
+                                    },
+                                    "parameters": {
+                                      "emailMessage/To": "@outputs('GetEmployee')?['body/lsw_emp_email']",
+                                      "emailMessage/Subject": "[주말근무 신청] 1차 반려",
+                                      "emailMessage/Body": "<p>1차 승인에서 반려되었습니다.</p><p>사유: @{coalesce(first(outputs('Approval1')?['body/responses'])?['comments'],'')}</p>"
+                                    },
+                                    "authentication": "@parameters('$authentication')"
+                                  },
+                                  "runAfter": {
+                                    "RejectStage1": [
+                                      "Succeeded"
+                                    ]
+                                  }
+                                }
+                              }
+                            },
+                            "runAfter": {
+                              "Approval1": [
+                                "Succeeded"
+                              ]
+                            }
+                          }
+                        },
+                        "else": {
+                          "actions": {
+                            "SetRoutingErrorLeader": {
+                              "type": "OpenApiConnection",
+                              "inputs": {
+                                "host": {
+                                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+                                  "connectionName": "shared_commondataserviceforapps",
+                                  "operationId": "UpdateRecord"
+                                },
+                                "parameters": {
+                                  "entityName": "lsw_tb_weekendworkrequests",
+                                  "recordId": "@triggerBody()?['lsw_tb_weekendworkrequestid']",
+                                  "item/lsw_approvalstatus": "RoutingError",
+                                  "item/lsw_flowerror": "@concat('Expected one distinct leader email, found ',string(length(outputs('UniqueLeaderEmails'))))"
+                                },
+                                "authentication": "@parameters('$authentication')"
+                              },
+                              "runAfter": {}
+                            },
+                            "EmailRoutingErrorLeader": {
+                              "type": "OpenApiConnection",
+                              "inputs": {
+                                "host": {
+                                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365",
+                                  "connectionName": "shared_office365",
+                                  "operationId": "SendEmailV2"
+                                },
+                                "parameters": {
+                                  "emailMessage/To": "@outputs('GetEmployee')?['body/lsw_emp_email']",
+                                  "emailMessage/Subject": "[Weekend Work] Approver review required",
+                                  "emailMessage/Body": "<p>We received the request, but could not resolve an approver. Contact an administrator.</p>"
+                                },
+                                "authentication": "@parameters('$authentication')"
+                              },
+                              "runAfter": {
+                                "SetRoutingErrorLeader": [
+                                  "Succeeded"
+                                ]
+                              }
+                            }
+                          }
+                        },
+                        "runAfter": {
+                          "UniqueLeaderEmails": [
+                            "Succeeded"
+                          ]
+                        }
+                      }
+                    },
+                    "else": {
+                      "actions": {
+                        "SetRoutingErrorTeam": {
+                          "type": "OpenApiConnection",
+                          "inputs": {
+                            "host": {
+                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+                              "connectionName": "shared_commondataserviceforapps",
+                              "operationId": "UpdateRecord"
+                            },
+                            "parameters": {
+                              "entityName": "lsw_tb_weekendworkrequests",
+                              "recordId": "@triggerBody()?['lsw_tb_weekendworkrequestid']",
+                              "item/lsw_approvalstatus": "RoutingError",
+                              "item/lsw_flowerror": "@concat('Expected one distinct applicant team, found ',string(length(outputs('UniqueApplicantTeams'))))"
+                            },
+                            "authentication": "@parameters('$authentication')"
+                          },
+                          "runAfter": {}
+                        },
+                        "EmailRoutingErrorTeam": {
+                          "type": "OpenApiConnection",
+                          "inputs": {
+                            "host": {
+                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365",
+                              "connectionName": "shared_office365",
+                              "operationId": "SendEmailV2"
+                            },
+                            "parameters": {
+                              "emailMessage/To": "@outputs('GetEmployee')?['body/lsw_emp_email']",
+                              "emailMessage/Subject": "[Weekend Work] Approver review required",
+                              "emailMessage/Body": "<p>We received the request, but could not resolve an approver. Contact an administrator.</p>"
+                            },
+                            "authentication": "@parameters('$authentication')"
+                          },
+                          "runAfter": {
+                            "SetRoutingErrorTeam": [
+                              "Succeeded"
+                            ]
+                          }
+                        }
+                      }
+                    },
+                    "runAfter": {
+                      "UniqueApplicantTeams": [
+                        "Succeeded"
+                      ]
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "EmailReceived": [
+                  "Succeeded"
+                ]
+              }
+            }
+          },
+          "else": {
+            "actions": {
+              "SetRoutingErrorEmployee": {
+                "type": "OpenApiConnection",
+                "inputs": {
+                  "host": {
+                    "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+                    "connectionName": "shared_commondataserviceforapps",
+                    "operationId": "UpdateRecord"
+                  },
+                  "parameters": {
+                    "entityName": "lsw_tb_weekendworkrequests",
+                    "recordId": "@triggerBody()?['lsw_tb_weekendworkrequestid']",
+                    "item/lsw_approvalstatus": "RoutingError",
+                    "item/lsw_currentstage": 0,
+                    "item/lsw_applicantemail": "",
+                    "item/lsw_applicantname": "",
+                    "item/lsw_employeeid": "",
+                    "item/lsw_department": "",
+                    "item/lsw_stage1approveremail": "",
+                    "item/lsw_stage2approveremail": "",
+                    "item/lsw_stage3approveremail": "",
+                    "item/lsw_stage1result": "",
+                    "item/lsw_stage2result": "",
+                    "item/lsw_stage3result": "",
+                    "item/lsw_processedby": "",
+                    "item/lsw_rejectionreason": "",
+                    "item/lsw_flowerror": "@concat('Creator email has ',string(length(outputs('FindEmployee')?['body/value'])),' matching employee rows; expected exactly one')"
+                  },
+                  "authentication": "@parameters('$authentication')"
+                },
+                "runAfter": {}
+              }
+            }
+          },
+          "runAfter": {
+            "FindEmployee": [
+              "Succeeded"
+            ]
+          }
+        }
+      }
+    },
+    "templateName": null
+  },
+  "schemaVersion": "1.0.0.0"
+}

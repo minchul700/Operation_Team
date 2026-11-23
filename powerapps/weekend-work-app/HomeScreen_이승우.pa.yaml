@@ -263,13 +263,11 @@ Screens:
                         PaddingRight: =0
                         PaddingTop: =0
                         Size: =28
-                        Text: |-
-                          ="주말근무 신청 시스템 -> 조직도별 분리(1차 승인자) -> 임원 (2차 승인자), 경영지원팀은 합의자 (3차 합의자)
-                          "
+                        Text: ="주말근무 신청 시스템"
                   - S1Intro:
                       Control: ModernText
                       Properties:
-                        AccessibleLabel: ="이 앱은 화면 시안이며 신청 저장 기능은 연결되어 있지 않습니다."
+                        AccessibleLabel: ="예정·완료 신청과 내역 조회 안내"
                         AlignInContainer: =AlignInContainer.Stretch
                         AutoHeight: =true
                         Color: =RGBA(83, 94, 108, 1)
@@ -277,7 +275,7 @@ Screens:
                         PaddingLeft: =0
                         PaddingRight: =0
                         PaddingTop: =0
-                        Text: ="예정·완료 신청 화면과 안내 메뉴를 이용할 수 있습니다. 현재 신청 저장 기능은 연결되어 있지 않습니다."
+                        Text: ="예정·완료 신청을 작성하고 조회와 캘린더에서 승인 상태를 확인하세요."
                   - S1ShortcutRow:
                       Control: GroupContainer
                       Variant: AutoLayout
@@ -326,7 +324,7 @@ Screens:
                                     PaddingRight: =0
                                     PaddingTop: =0
                                     Size: =20
-                                    Text: ="주말근무 예정 신청 -> 독립적"
+                                    Text: ="주말근무 예정 신청"
                               - S1PlannedCopy:
                                   Control: ModernText
                                   Properties:
@@ -387,7 +385,7 @@ Screens:
                               PaddingRight: =0
                               PaddingTop: =0
                               Size: =18
-                              Text: ="본인 신청 내역 -> 갤러리로 변경"
+                              Text: ="최근 신청 내역"
                               Wrap: =false
                         - S1EmptyMessage:
                             Control: ModernText
@@ -400,7 +398,15 @@ Screens:
                               PaddingLeft: =0
                               PaddingRight: =0
                               PaddingTop: =0
-                              Text: ="신청 내역이 없습니다."
+                              Text: |-
+                                =With(
+                                    {latest: First(SortByColumns(Filter(TB_WeekendWorkRequests, lsw_applicantemail = User().Email), "lsw_workdate", SortOrder.Descending))},
+                                    If(
+                                        IsBlank(latest.lsw_tb_weekendworkrequestid),
+                                        "신청 내역이 없습니다.",
+                                        Text(latest.lsw_workdate, "yyyy-mm-dd") & " · " & If(latest.lsw_requesttype = "Planned", "예정", "완료") & " · " & Coalesce(latest.lsw_approvalstatus, "접수")
+                                    )
+                                )
                         - Button1:
                             Control: Classic/Button
                             Properties:
@@ -417,7 +423,7 @@ Screens:
                               HoverFill: =RGBA(16, 110, 190, 1)
                               LayoutMinHeight: =16
                               LayoutMinWidth: =16
-                              OnSelect: =Navigate(CompletedRequestScreen_윤대진)
+                              OnSelect: =Navigate(InquiryScreen_이형대)
                               PressedBorderColor: =RGBA(0, 69, 120, 1)
                               PressedColor: =RGBA(255, 255, 255, 1)
                               PressedFill: =RGBA(16, 110, 190, 1)
@@ -425,4 +431,4 @@ Screens:
                               RadiusBottomRight: =0
                               RadiusTopLeft: =0
                               RadiusTopRight: =0
-                              Text: ="예시) 갤러리 아이템으로 존재하며 클릭하면 해당 신청내역으로 이동"
+                              Text: ="전체 신청 내역 보기"
