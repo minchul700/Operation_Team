@@ -527,13 +527,3 @@ Screens:
                               PaddingTop: =0
                               Size: =14
                               Text: ="현재는 화면 미리보기 단계이며 입력 내용은 저장되거나 제출되지 않습니다."
-                        - S2TestButton:
-                            Control: ModernButton
-                            Properties:
-                              AccessibleLabel: ="테스트 버튼"
-                              Height: =48
-                              Layout: =ButtonLayout.TextOnly
-                              LayoutMinWidth: =0
-                              OnSelect: =Notify("Test", NotificationType.Information)
-                              Text: ="Test"
-                              Width: =Parent.Width
